@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -11,22 +12,33 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { Toaster } from "@/components/ui/sonner";
+import { StoreProvider } from "@/lib/store";
+import { ThemeProvider } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="font-display text-7xl text-gradient-gold">404</p>
+        <h1 className="mt-4 font-display text-3xl">This page slipped away</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <div className="mt-6">
+        <div className="mt-8 flex justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex h-11 items-center rounded-sm bg-primary px-5 text-sm text-primary-foreground transition hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring/50"
           >
-            Go home
+            Back home
+          </Link>
+          <Link
+            to="/explore"
+            className="inline-flex h-11 items-center rounded-sm border border-input px-5 text-sm transition hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50"
+          >
+            Explore hair
           </Link>
         </div>
       </div>
@@ -42,27 +54,25 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h1 className="font-display text-3xl">This page didn't load</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex h-11 items-center rounded-sm bg-primary px-5 text-sm text-primary-foreground transition hover:bg-primary/90"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex h-11 items-center rounded-sm border border-input px-5 text-sm transition hover:bg-secondary"
           >
             Go home
           </a>
@@ -77,19 +87,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Hair by Gold — Luxury Wigs & Hair Care" },
+      {
+        name: "description",
+        content:
+          "Hair by Gold: hand-selected virgin hair, HD lace wigs, bundles and after-care rituals with concierge styling support.",
+      },
+      { name: "author", content: "Hair by Gold" },
+      { property: "og:title", content: "Hair by Gold — Luxury Wigs & Hair Care" },
+      {
+        property: "og:description",
+        content: "Premium wigs, bundles and hair care with concierge styling support.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Karla:wght@300;400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -114,13 +133,41 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function Chrome() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAuth = ["/login", "/signup", "/forgot-password"].includes(pathname);
+
+  if (isAuth) {
+    return (
+      <main id="main">
+        <Outlet />
+      </main>
+    );
+  }
+
+  return (
+    <div className="flex min-h-dvh flex-col transition-colors duration-500">
+      <SiteHeader />
+      <main id="main" className="flex-1">
+        <Outlet />
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <ThemeProvider>
+        <StoreProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Chrome />
+          <Toaster position="top-center" />
+        </StoreProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
