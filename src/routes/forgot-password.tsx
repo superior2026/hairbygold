@@ -19,7 +19,7 @@ export const Route = createFileRoute("/forgot-password")({
       { property: "og:description", content: "Request a reset link (demo only)." },
     ],
   }),
-  component: ForgotPassword;
+  component: ForgotPassword,
 });
 
 const schema = z.object({ email: z.string().trim().email("Enter a valid email").max(255) });
