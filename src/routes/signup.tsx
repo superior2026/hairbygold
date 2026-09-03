@@ -61,7 +61,7 @@ function Signup() {
   return (
     <div className="mx-auto max-w-md px-5 py-16 lg:px-8">
       <div className="text-center">
-        <BrandLogo className="mx-auto" />
+        <BrandLogo className="mx-auto" imgClassName="h-10 sm:h-12" />
         <h1 className="mt-6 font-display text-4xl">Create your account</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Demo scaffold — nothing is stored and no account is created.
