@@ -15,6 +15,7 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
 import { Route as OrdersRouteImport } from './routes/orders'
@@ -51,6 +52,11 @@ const ExploreRoute = ExploreRouteImport.update({
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/explore'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/explore'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/explore'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ExploreRoute: typeof ExploreRoute
   HelpRoute: typeof HelpRoute
+  LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   OrderConfirmationRoute: typeof OrderConfirmationRoute
   OrdersRoute: typeof OrdersRoute
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -302,6 +322,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ExploreRoute: ExploreRoute,
   HelpRoute: HelpRoute,
+  LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   OrderConfirmationRoute: OrderConfirmationRoute,
   OrdersRoute: OrdersRoute,
