@@ -31,10 +31,10 @@ function Payment() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
-    if (form.number.replace(/\s/g, "").length < 15) next.number = "Enter a 16-digit card number";
-    if (form.name.trim().length < 2) next.name = "Enter the name on the card";
-    if (!/^\d{2}\/\d{2}$/.test(form.expiry)) next.expiry = "Use MM/YY";
-    if (form.cvc.length < 3) next.cvc = "3 digits";
+    if (form["number"].replace(/\s/g, "").length < 15) next["number"] = "Enter a 16-digit card number";
+    if (form["name"].trim().length < 2) next["name"] = "Enter the name on the card";
+    if (!/^\d{2}\/\d{2}$/.test(form["expiry"])) next["expiry"] = "Use MM/YY";
+    if (form["cvc"].length < 3) next["cvc"] = "3 digits";
     setErrors(next);
     if (Object.keys(next).length) return;
     setCards((prev) => [
@@ -42,8 +42,8 @@ function Payment() {
       {
         id: `pm${prev.length + 1}`,
         brand: "Visa",
-        last4: form.number.replace(/\s/g, "").slice(-4),
-        expiry: form.expiry,
+        last4: form["number"].replace(/\s/g, "").slice(-4),
+        expiry: form["expiry"],
         primary: false,
       },
     ]);
