@@ -154,13 +154,13 @@ function Help() {
                   className="mt-2"
                   maxLength={1000}
                   value={values.message}
-                  aria-invalid={!!errors.message}
-                  aria-describedby={errors.message ? "message-error" : undefined}
+                  aria-invalid={!!errors["message"]}
+                  aria-describedby={errors["message"] ? "message-error" : undefined}
                   onChange={(e) => setValues((v) => ({ ...v, message: e.target.value }))}
                 />
-                {errors.message ? (
+                {errors["message"] ? (
                   <p id="message-error" role="alert" className="mt-1.5 text-xs text-destructive">
-                    {errors.message}
+                    {errors["message"]}
                   </p>
                 ) : null}
               </div>

@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
 import { ProductSearch } from "@/components/product-search";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useStore } from "@/lib/store";
@@ -61,7 +62,8 @@ export function SiteHeader() {
           </SheetTrigger>
           <SheetContent side="left" className="w-72">
             <SheetHeader>
-              <SheetTitle className="font-display text-2xl">Hair by Gold</SheetTitle>
+              <SheetTitle className="sr-only">Hair by Gold Beauty Hub &amp; Spa</SheetTitle>
+              <BrandLogo className="w-full" imgClassName="h-10" />
             </SheetHeader>
             <nav aria-label="Mobile" className="mt-4 flex flex-col px-4">
               {navLinks.map((l) => (
@@ -86,9 +88,10 @@ export function SiteHeader() {
 
         <Link
           to="/"
-          className="rounded-sm font-display text-2xl leading-none tracking-tight focus-visible:ring-2 focus-visible:ring-ring/50"
+          aria-label="Hair by Gold Beauty Hub & Spa — home"
+          className="rounded-sm focus-visible:ring-2 focus-visible:ring-ring/50"
         >
-          Hair by <span className="text-gradient-gold">Gold</span>
+          <BrandLogo imgClassName="h-8 sm:h-9" />
         </Link>
 
         <nav aria-label="Primary" className="ml-6 hidden items-center gap-6 md:flex">

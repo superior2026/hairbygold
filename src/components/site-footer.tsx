@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 
 const columns = [
   {
@@ -33,9 +34,7 @@ export function SiteFooter() {
     <footer className="mt-24 border-t border-border bg-sidebar">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)] lg:px-8">
         <div className="max-w-sm">
-          <p className="font-display text-2xl">
-            Hair by <span className="text-gradient-gold">Gold</span>
-          </p>
+          <BrandLogo imgClassName="h-10 sm:h-12" />
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Hand-selected virgin hair, HD lace units and after-care rituals — finished in our Lagos
             studio and shipped worldwide.

@@ -31,3 +31,10 @@
 - [ ] Checkout shipping speed options affecting the order summary total
 - [ ] Order tracking page with timeline + latest-update card, linked from confirmation & history
 - [ ] Help Center: FAQ accordion + support form with validation and mock ticket confirmation
+
+## Round 5
+- [x] Canonical gold #d5af59 across light/dark tokens (primary, gold, rings, charts)
+- [x] Fix help.tsx / payment.tsx index-signature build errors
+- [x] Auth routes: Login, Signup, Forgot password
+- [x] Settings route: profile, addresses, change password, preferences
+- [x] Official logo asset used in header, mobile drawer, footer, auth pages, favicon

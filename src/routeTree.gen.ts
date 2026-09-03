@@ -14,11 +14,15 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PaymentRouteImport } from './routes/payment'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
@@ -48,9 +52,19 @@ const ExploreRoute = ExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -71,6 +85,16 @@ const OrdersRoute = OrdersRouteImport.update({
 const PaymentRoute = PaymentRouteImport.update({
   id: '/payment',
   path: '/payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WishlistRoute = WishlistRouteImport.update({
@@ -95,11 +119,15 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -110,11 +138,15 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -126,11 +158,15 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -143,11 +179,15 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkout'
     | '/explore'
+    | '/forgot-password'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/settings'
+    | '/signup'
     | '/wishlist'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -158,11 +198,15 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkout'
     | '/explore'
+    | '/forgot-password'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/settings'
+    | '/signup'
     | '/wishlist'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -173,11 +217,15 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkout'
     | '/explore'
+    | '/forgot-password'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/settings'
+    | '/signup'
     | '/wishlist'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -189,11 +237,15 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   CheckoutRoute: typeof CheckoutRoute
   ExploreRoute: typeof ExploreRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HelpRoute: typeof HelpRoute
+  LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   OrderConfirmationRoute: typeof OrderConfirmationRoute
   OrdersRoute: typeof OrdersRoute
   PaymentRoute: typeof PaymentRoute
+  SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   WishlistRoute: typeof WishlistRoute
   ProductProductIdRoute: typeof ProductProductIdRoute
   TrackingOrderIdRoute: typeof TrackingOrderIdRoute
@@ -236,11 +288,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help': {
       id: '/help'
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -269,6 +335,20 @@ declare module '@tanstack/react-router' {
       path: '/payment'
       fullPath: '/payment'
       preLoaderRoute: typeof PaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wishlist': {
@@ -301,11 +381,15 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   CheckoutRoute: CheckoutRoute,
   ExploreRoute: ExploreRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HelpRoute: HelpRoute,
+  LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   OrderConfirmationRoute: OrderConfirmationRoute,
   OrdersRoute: OrdersRoute,
   PaymentRoute: PaymentRoute,
+  SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   WishlistRoute: WishlistRoute,
   ProductProductIdRoute: ProductProductIdRoute,
   TrackingOrderIdRoute: TrackingOrderIdRoute,
