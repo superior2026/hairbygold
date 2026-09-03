@@ -14,6 +14,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -48,6 +49,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const ExploreRoute = ExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HelpRoute = HelpRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkout'
     | '/explore'
+    | '/forgot-password'
     | '/help'
     | '/login'
     | '/notifications'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkout'
     | '/explore'
+    | '/forgot-password'
     | '/help'
     | '/login'
     | '/notifications'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/checkout'
     | '/explore'
+    | '/forgot-password'
     | '/help'
     | '/login'
     | '/notifications'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   CheckoutRoute: typeof CheckoutRoute
   ExploreRoute: typeof ExploreRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HelpRoute: typeof HelpRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/explore'
       fullPath: '/explore'
       preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/help': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   CheckoutRoute: CheckoutRoute,
   ExploreRoute: ExploreRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HelpRoute: HelpRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
