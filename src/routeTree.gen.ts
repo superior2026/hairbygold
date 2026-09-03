@@ -20,6 +20,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PaymentRouteImport } from './routes/payment'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
@@ -79,6 +80,11 @@ const PaymentRoute = PaymentRouteImport.update({
   path: '/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WishlistRoute = WishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/signup'
     | '/wishlist'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/signup'
     | '/wishlist'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/signup'
     | '/wishlist'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   OrderConfirmationRoute: typeof OrderConfirmationRoute
   OrdersRoute: typeof OrdersRoute
   PaymentRoute: typeof PaymentRoute
+  SignupRoute: typeof SignupRoute
   WishlistRoute: typeof WishlistRoute
   ProductProductIdRoute: typeof ProductProductIdRoute
   TrackingOrderIdRoute: typeof TrackingOrderIdRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/wishlist': {
       id: '/wishlist'
       path: '/wishlist'
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrderConfirmationRoute: OrderConfirmationRoute,
   OrdersRoute: OrdersRoute,
   PaymentRoute: PaymentRoute,
+  SignupRoute: SignupRoute,
   WishlistRoute: WishlistRoute,
   ProductProductIdRoute: ProductProductIdRoute,
   TrackingOrderIdRoute: TrackingOrderIdRoute,
