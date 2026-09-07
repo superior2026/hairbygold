@@ -63,7 +63,7 @@ export function SiteHeader() {
           <SheetContent side="left" className="w-72">
             <SheetHeader>
               <SheetTitle className="sr-only">Hair by Gold Beauty Hub &amp; Spa</SheetTitle>
-              <BrandLogo className="w-full" imgClassName="h-10" />
+              <BrandLogo className="w-full justify-start py-1" imgClassName="h-9 w-auto" />
             </SheetHeader>
             <nav aria-label="Mobile" className="mt-4 flex flex-col px-4">
               {navLinks.map((l) => (
@@ -89,9 +89,9 @@ export function SiteHeader() {
         <Link
           to="/"
           aria-label="Hair by Gold Beauty Hub & Spa — home"
-          className="rounded-sm focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="flex shrink-0 items-center rounded-sm py-1 focus-visible:ring-2 focus-visible:ring-ring/50"
         >
-          <BrandLogo imgClassName="h-8 sm:h-9" />
+          <BrandLogo imgClassName="h-7 sm:h-8 md:h-9" />
         </Link>
 
         <nav aria-label="Primary" className="ml-6 hidden items-center gap-6 md:flex">
