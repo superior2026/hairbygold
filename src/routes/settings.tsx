@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check, MapPin, ShieldCheck, UserRound } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BrandAssetsPanel } from "@/components/brand-assets-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
