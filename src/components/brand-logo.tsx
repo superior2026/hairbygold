@@ -1,10 +1,11 @@
-import logoAsset from "@/assets/hair-by-gold-wordmark.png.asset.json";
+import logoAsset from "@/assets/hair-by-gold-wordmark-light.png.asset.json";
 import { cn } from "@/lib/utils";
 
 /**
- * Official Hair by Gold Beauty Hub & Spa mark. The artwork ships on its own dark
- * backdrop, so it always sits inside an ink chip — legible on both light and
- * dark themes, with proportions preserved via object-contain.
+ * Official Hair by Gold Beauty Hub & Spa mark (light-background artwork). The
+ * "Beauty Hub & Spa" line is white, so the logo always sits inside a dark ink
+ * chip — legible on both light and dark themes, proportions preserved via
+ * object-contain.
  */
 export function BrandLogo({
   className,
@@ -23,8 +24,8 @@ export function BrandLogo({
       <img
         src={logoAsset.url}
         alt="Hair by Gold Beauty Hub & Spa"
-        width={1051}
-        height={362}
+        width={401}
+        height={127}
         className={cn("h-7 w-auto object-contain sm:h-8", imgClassName)}
         loading="eager"
         decoding="async"
