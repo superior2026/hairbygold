@@ -39,7 +39,7 @@ export function BrandLogo({
       />
       <img
         src={logoDark.url}
-        alt="Hair by Gold Beauty Hub & Spa"
+        alt=""
         width={1004}
         height={315}
         aria-hidden="true"
