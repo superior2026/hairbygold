@@ -91,7 +91,7 @@ export function SiteHeader() {
           aria-label="Hair by Gold Beauty Hub & Spa — home"
           className="flex shrink-0 items-center rounded-sm py-1 focus-visible:ring-2 focus-visible:ring-ring/50"
         >
-          <BrandLogo imgClassName="h-7 sm:h-8 md:h-9" />
+          <BrandLogo imgClassName="h-8 sm:h-9 md:h-10" />
         </Link>
 
         <nav aria-label="Primary" className="ml-6 hidden items-center gap-6 md:flex">
