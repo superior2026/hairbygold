@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check, MapPin, ShieldCheck, UserRound } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BrandAssetsPanel } from "@/components/brand-assets-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -333,6 +334,7 @@ function Settings() {
           <TabsTrigger value="addresses">Addresses</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
+          <TabsTrigger value="brand">Brand</TabsTrigger>
         </TabsList>
         <TabsContent value="profile" className="mt-6">
           <ProfilePanel />
@@ -345,6 +347,9 @@ function Settings() {
         </TabsContent>
         <TabsContent value="preferences" className="mt-6">
           <PreferencesPanel />
+        </TabsContent>
+        <TabsContent value="brand" className="mt-6">
+          <BrandAssetsPanel />
         </TabsContent>
       </Tabs>
     </div>
