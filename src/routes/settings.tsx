@@ -333,6 +333,7 @@ function Settings() {
           <TabsTrigger value="addresses">Addresses</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
+          <TabsTrigger value="brand">Brand</TabsTrigger>
         </TabsList>
         <TabsContent value="profile" className="mt-6">
           <ProfilePanel />
@@ -345,6 +346,9 @@ function Settings() {
         </TabsContent>
         <TabsContent value="preferences" className="mt-6">
           <PreferencesPanel />
+        </TabsContent>
+        <TabsContent value="brand" className="mt-6">
+          <BrandAssetsPanel />
         </TabsContent>
       </Tabs>
     </div>
