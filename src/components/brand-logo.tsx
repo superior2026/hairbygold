@@ -1,5 +1,5 @@
-import logoDark from "@/assets/hair-by-gold-logo-dark.png.asset.json";
-import logoLight from "@/assets/hair-by-gold-logo-light.png.asset.json";
+import { useEffect } from "react";
+import { applyFavicon, useBrandAssets } from "@/lib/brand-assets";
 import { cn } from "@/lib/utils";
 
 /**
@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
  * Two variants of the same artwork ship: the light-theme file uses ink-dark
  * "Beauty Hub & Spa" lettering, the dark-theme file keeps it white. CSS swaps
  * them with the active theme so no opaque chip is needed. Proportions are
- * preserved (1004x315) via object-contain.
+ * preserved (1004x315) via object-contain. Owners can override either variant
+ * (and the tab icon) locally from Settings → Brand assets.
  */
 export function BrandLogo({
   className,
@@ -16,8 +17,14 @@ export function BrandLogo({
   className?: string;
   imgClassName?: string;
 }) {
+  const brand = useBrandAssets();
+
+  useEffect(() => {
+    applyFavicon(brand.favicon);
+  }, [brand.favicon]);
+
   const imgClasses = cn(
-    "h-7 w-auto max-w-full object-contain object-center sm:h-8",
+    "h-8 w-auto max-w-full object-contain object-center sm:h-9",
     imgClassName,
   );
 
@@ -29,7 +36,7 @@ export function BrandLogo({
       )}
     >
       <img
-        src={logoLight.url}
+        src={brand.logoLight}
         alt="Hair by Gold Beauty Hub & Spa"
         width={1004}
         height={315}
@@ -38,7 +45,7 @@ export function BrandLogo({
         decoding="async"
       />
       <img
-        src={logoDark.url}
+        src={brand.logoDark}
         alt=""
         width={1004}
         height={315}
