@@ -71,7 +71,7 @@ export function SiteHeader() {
               <BrandLogo className="w-full justify-start py-1" imgClassName="h-9 w-auto" />
             </SheetHeader>
             <nav aria-label="Mobile" className="mt-4 flex flex-col px-4">
-              {navLinks.map((l) => (
+              {[...navLinks, ...mobileOnlyLinks].map((l) => (
                 <Link
                   key={l.to}
                   to={l.to}
