@@ -4,10 +4,11 @@ import { BrandLogo } from "@/components/brand-logo";
 
 const columns = [
   {
-    title: "Shop",
+    title: "Studio",
     links: [
       { label: "Explore all", to: "/explore" as const },
-      { label: "Wishlist", to: "/wishlist" as const },
+      { label: "Salon services", to: "/services" as const },
+      { label: "Featured hairstyles", to: "/gallery" as const },
       { label: "Order history", to: "/orders" as const },
     ],
   },
