@@ -15,12 +15,14 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PaymentRouteImport } from './routes/payment'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WishlistRouteImport } from './routes/wishlist'
@@ -57,6 +59,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -85,6 +92,11 @@ const OrdersRoute = OrdersRouteImport.update({
 const PaymentRoute = PaymentRouteImport.update({
   id: '/payment',
   path: '/payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -120,12 +132,14 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gallery': typeof GalleryRoute
   '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
@@ -139,12 +153,14 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gallery': typeof GalleryRoute
   '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
@@ -159,12 +175,14 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gallery': typeof GalleryRoute
   '/help': typeof HelpRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/orders': typeof OrdersRoute
   '/payment': typeof PaymentRoute
+  '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
@@ -180,12 +198,14 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/explore'
     | '/forgot-password'
+    | '/gallery'
     | '/help'
     | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/services'
     | '/settings'
     | '/signup'
     | '/wishlist'
@@ -199,12 +219,14 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/explore'
     | '/forgot-password'
+    | '/gallery'
     | '/help'
     | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/services'
     | '/settings'
     | '/signup'
     | '/wishlist'
@@ -218,12 +240,14 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/explore'
     | '/forgot-password'
+    | '/gallery'
     | '/help'
     | '/login'
     | '/notifications'
     | '/order-confirmation'
     | '/orders'
     | '/payment'
+    | '/services'
     | '/settings'
     | '/signup'
     | '/wishlist'
@@ -238,12 +262,14 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ExploreRoute: typeof ExploreRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  GalleryRoute: typeof GalleryRoute
   HelpRoute: typeof HelpRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   OrderConfirmationRoute: typeof OrderConfirmationRoute
   OrdersRoute: typeof OrdersRoute
   PaymentRoute: typeof PaymentRoute
+  ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   WishlistRoute: typeof WishlistRoute
@@ -295,6 +321,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help': {
       id: '/help'
       path: '/help'
@@ -335,6 +368,13 @@ declare module '@tanstack/react-router' {
       path: '/payment'
       fullPath: '/payment'
       preLoaderRoute: typeof PaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -382,12 +422,14 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ExploreRoute: ExploreRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  GalleryRoute: GalleryRoute,
   HelpRoute: HelpRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   OrderConfirmationRoute: OrderConfirmationRoute,
   OrdersRoute: OrdersRoute,
   PaymentRoute: PaymentRoute,
+  ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   WishlistRoute: WishlistRoute,

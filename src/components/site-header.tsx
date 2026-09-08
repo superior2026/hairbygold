@@ -21,9 +21,14 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Explore", to: "/explore" as const },
-  { label: "Wishlist", to: "/wishlist" as const },
+  { label: "Services", to: "/services" as const },
+  { label: "Gallery", to: "/gallery" as const },
   { label: "Orders", to: "/orders" as const },
   { label: "Chat", to: "/chat" as const },
+];
+
+const mobileOnlyLinks = [
+  { label: "Wishlist", to: "/wishlist" as const },
   { label: "Help", to: "/help" as const },
 ];
 
@@ -66,7 +71,7 @@ export function SiteHeader() {
               <BrandLogo className="w-full justify-start py-1" imgClassName="h-9 w-auto" />
             </SheetHeader>
             <nav aria-label="Mobile" className="mt-4 flex flex-col px-4">
-              {navLinks.map((l) => (
+              {[...navLinks, ...mobileOnlyLinks].map((l) => (
                 <Link
                   key={l.to}
                   to={l.to}
