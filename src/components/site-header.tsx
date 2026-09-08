@@ -21,9 +21,14 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Explore", to: "/explore" as const },
-  { label: "Wishlist", to: "/wishlist" as const },
+  { label: "Services", to: "/services" as const },
+  { label: "Gallery", to: "/gallery" as const },
   { label: "Orders", to: "/orders" as const },
   { label: "Chat", to: "/chat" as const },
+];
+
+const mobileOnlyLinks = [
+  { label: "Wishlist", to: "/wishlist" as const },
   { label: "Help", to: "/help" as const },
 ];
 
