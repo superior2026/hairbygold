@@ -30,6 +30,7 @@ const navLinks = [
 const mobileOnlyLinks = [
   { label: "Wishlist", to: "/wishlist" as const },
   { label: "Help", to: "/help" as const },
+  { label: "Owner dashboard", to: "/dashboard" as const },
 ];
 
 function Badge({ count }: { count: number }) {

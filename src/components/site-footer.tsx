@@ -26,6 +26,7 @@ const columns = [
       { label: "Sign in", to: "/login" as const },
       { label: "Create account", to: "/signup" as const },
       { label: "Reset password", to: "/forgot-password" as const },
+      { label: "Owner dashboard", to: "/dashboard" as const },
     ],
   },
 ];
