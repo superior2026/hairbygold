@@ -10,10 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as GalleryRouteImport } from './routes/gallery'
@@ -27,12 +27,17 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -48,11 +53,6 @@ const ChatRoute = ChatRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreRoute = ExploreRouteImport.update({
@@ -120,6 +120,11 @@ const WishlistRoute = WishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ProductProductIdRoute = ProductProductIdRouteImport.update({
   id: '/product/$productId',
   path: '/product/$productId',
@@ -136,7 +141,6 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
-  '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
@@ -150,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
@@ -158,7 +163,6 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
-  '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
@@ -172,16 +176,17 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
-  '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
@@ -195,6 +200,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
 }
@@ -205,7 +211,6 @@ export interface FileRouteTypes {
     | '/cart'
     | '/chat'
     | '/checkout'
-    | '/dashboard'
     | '/explore'
     | '/forgot-password'
     | '/gallery'
@@ -219,6 +224,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/wishlist'
+    | '/dashboard'
     | '/product/$productId'
     | '/tracking/$orderId'
   fileRoutesByTo: FileRoutesByTo
@@ -227,7 +233,6 @@ export interface FileRouteTypes {
     | '/cart'
     | '/chat'
     | '/checkout'
-    | '/dashboard'
     | '/explore'
     | '/forgot-password'
     | '/gallery'
@@ -241,15 +246,16 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/wishlist'
+    | '/dashboard'
     | '/product/$productId'
     | '/tracking/$orderId'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/cart'
     | '/chat'
     | '/checkout'
-    | '/dashboard'
     | '/explore'
     | '/forgot-password'
     | '/gallery'
@@ -263,16 +269,17 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/wishlist'
+    | '/_authenticated/dashboard'
     | '/product/$productId'
     | '/tracking/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CartRoute: typeof CartRoute
   ChatRoute: typeof ChatRoute
   CheckoutRoute: typeof CheckoutRoute
-  DashboardRoute: typeof DashboardRoute
   ExploreRoute: typeof ExploreRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GalleryRoute: typeof GalleryRoute
@@ -299,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
@@ -318,13 +332,6 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explore': {
@@ -418,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/product/$productId': {
       id: '/product/$productId'
       path: '/product/$productId'
@@ -435,12 +449,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CartRoute: CartRoute,
   ChatRoute: ChatRoute,
   CheckoutRoute: CheckoutRoute,
-  DashboardRoute: DashboardRoute,
   ExploreRoute: ExploreRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GalleryRoute: GalleryRoute,
