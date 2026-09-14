@@ -34,7 +34,7 @@ export const Route = createFileRoute("/chat")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Chat;
+  component: Chat,
 });
 
 const TOKEN_KEY = "hbg-chat-token";
