@@ -16,6 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
 import { services } from "@/lib/salon-data";
+import { submitBooking } from "@/lib/studio.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -41,7 +43,8 @@ const schema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80),
   contact: z.string().trim().min(6, "Add a phone number or email").max(120),
   date: z.string().trim().min(1, "Choose a preferred date"),
-  notes: z.string().trim().max(500).optional(),
+  time: z.string().trim().min(1, "Choose a preferred time"),
+  notes: z.string().trim().max(500),
 });
 
 function ServiceCardSkeleton() {
@@ -58,18 +61,22 @@ function ServiceCardSkeleton() {
 
 function Services() {
   const loading = useFakeLoading(900);
+  const saveBooking = useServerFn(submitBooking);
   const [booking, setBooking] = useState<string | null>(null);
-  const [values, setValues] = useState({ name: "", contact: "", date: "", notes: "" });
+  const [values, setValues] = useState({ name: "", contact: "", date: "", time: "", notes: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState("");
 
   function openBooking(serviceName: string) {
     setBooking(serviceName);
     setErrors({});
     setSent(false);
+    setFailed("");
   }
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
@@ -82,7 +89,26 @@ function Services() {
       return;
     }
     setErrors({});
-    setSent(true);
+    setFailed("");
+    setBusy(true);
+    try {
+      await saveBooking({
+        data: {
+          service_name: booking ?? "Appointment",
+          customer_name: parsed.data.name,
+          contact: parsed.data.contact,
+          preferred_date: parsed.data.date,
+          preferred_time: parsed.data.time,
+          notes: parsed.data.notes,
+        },
+      });
+      setSent(true);
+      setValues({ name: "", contact: "", date: "", time: "", notes: "" });
+    } catch {
+      setFailed("We couldn't send that just now. Please try again in a moment.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
