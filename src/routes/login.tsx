@@ -1,21 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Sign In — Hair by Gold" },
+      { title: "Owner Sign In — Hair by Gold" },
       {
         name: "description",
-        content: "Sign in to your Hair by Gold account to track orders, wishlists and concierge chats.",
+        content: "Sign in to the Hair by Gold studio account to manage products, messages and bookings.",
       },
-      { property: "og:title", content: "Sign In — Hair by Gold" },
+      { property: "og:title", content: "Owner Sign In — Hair by Gold" },
       { property: "og:description", content: "Access your Hair by Gold studio account." },
+      { name: "robots", content: "noindex" },
     ],
   }),
   component: Login,
@@ -27,11 +29,13 @@ const schema = z.object({
 });
 
 function Login() {
+  const navigate = useNavigate();
   const [values, setValues] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [done, setDone] = useState(false);
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
@@ -41,79 +45,84 @@ function Login() {
       return;
     }
     setErrors({});
-    setDone(true);
+    setMessage("");
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
+    setBusy(false);
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+    void navigate({ to: "/dashboard", replace: true });
   };
 
   return (
     <div className="mx-auto max-w-md px-5 py-16 lg:px-8">
       <div className="text-center">
         <BrandLogo className="mx-auto" imgClassName="h-10 sm:h-12" />
-        <h1 className="mt-6 font-display text-4xl">Welcome back</h1>
+        <h1 className="mt-6 font-display text-4xl">Studio sign in</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Demo scaffold — no real authentication is performed.
+          For the studio owner. Customers don&apos;t need an account to shop or chat.
         </p>
       </div>
 
-      {done ? (
-        <p
-          role="status"
-          className="mt-8 rounded-sm border border-success/40 bg-card p-6 text-center text-sm"
-        >
-          Signed in (mock). Continue to{" "}
-          <Link to="/explore" className="text-primary underline">
-            Explore
+      <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            className="mt-2"
+            maxLength={255}
+            value={values.email}
+            aria-invalid={!!errors["email"]}
+            onChange={(e) => setValues((v) => ({ ...v, email: e.target.value }))}
+          />
+          {errors["email"] ? (
+            <p role="alert" className="mt-1.5 text-xs text-destructive">
+              {errors["email"]}
+            </p>
+          ) : null}
+        </div>
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            className="mt-2"
+            maxLength={72}
+            value={values.password}
+            aria-invalid={!!errors["password"]}
+            onChange={(e) => setValues((v) => ({ ...v, password: e.target.value }))}
+          />
+          {errors["password"] ? (
+            <p role="alert" className="mt-1.5 text-xs text-destructive">
+              {errors["password"]}
+            </p>
+          ) : null}
+        </div>
+        {message ? (
+          <p role="alert" className="text-sm text-destructive">
+            {message}
+          </p>
+        ) : null}
+        <Button type="submit" className="w-full" disabled={busy}>
+          {busy ? "Signing in…" : "Sign in"}
+        </Button>
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <Link to="/forgot-password" className="hover:text-primary">
+            Forgot password?
           </Link>
-          .
-        </p>
-      ) : (
-        <form onSubmit={submit} className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              className="mt-2"
-              maxLength={255}
-              value={values["email"]}
-              aria-invalid={!!errors["email"]}
-              onChange={(e) => setValues((v) => ({ ...v, email: e.target.value }))}
-            />
-            {errors["email"] ? (
-              <p role="alert" className="mt-1.5 text-xs text-destructive">
-                {errors["email"]}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              className="mt-2"
-              maxLength={72}
-              value={values["password"]}
-              aria-invalid={!!errors["password"]}
-              onChange={(e) => setValues((v) => ({ ...v, password: e.target.value }))}
-            />
-            {errors["password"] ? (
-              <p role="alert" className="mt-1.5 text-xs text-destructive">
-                {errors["password"]}
-              </p>
-            ) : null}
-          </div>
-          <Button type="submit" className="w-full">
-            Sign in
-          </Button>
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <Link to="/forgot-password" className="hover:text-primary">
-              Forgot password?
-            </Link>
-            <Link to="/signup" className="hover:text-primary">
-              Create account
-            </Link>
-          </div>
-        </form>
-      )}
+          <Link to="/signup" className="hover:text-primary">
+            Create studio account
+          </Link>
+        </div>
+      </form>
     </div>
   );
 }
