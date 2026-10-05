@@ -203,8 +203,7 @@ function Services() {
               Book {booking ?? "an appointment"}
             </DialogTitle>
             <DialogDescription>
-              Send an inquiry and the studio will confirm your slot and pricing. This is a demo
-              form — nothing is submitted anywhere.
+              Send a request and the studio will confirm your slot and current pricing.
             </DialogDescription>
           </DialogHeader>
 
@@ -272,6 +271,20 @@ function Services() {
                 ) : null}
               </div>
               <div>
+                <Label htmlFor="bk-time">Preferred time</Label>
+                <Input
+                  id="bk-time"
+                  type="time"
+                  value={values.time}
+                  onChange={(e) => setValues((v) => ({ ...v, time: e.target.value }))}
+                  aria-invalid={Boolean(errors["time"])}
+                  className="mt-2"
+                />
+                {errors["time"] ? (
+                  <p className="mt-1 text-xs text-destructive">{errors["time"]}</p>
+                ) : null}
+              </div>
+              <div>
                 <Label htmlFor="bk-notes">Anything we should know? (optional)</Label>
                 <Textarea
                   id="bk-notes"
@@ -281,8 +294,15 @@ function Services() {
                   className="mt-2"
                 />
               </div>
+              {failed ? (
+                <p role="alert" className="text-sm text-destructive">
+                  {failed}
+                </p>
+              ) : null}
               <div className="flex flex-wrap items-center gap-3">
-                <Button type="submit">Send inquiry</Button>
+                <Button type="submit" disabled={busy}>
+                  {busy ? "Sending…" : "Send inquiry"}
+                </Button>
                 <Link
                   to="/help"
                   className="rounded-sm text-sm text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring/50"
