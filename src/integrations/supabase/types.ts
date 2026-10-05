@@ -125,6 +125,7 @@ export type Database = {
           description: string
           id: string
           image_key: string
+          image_url: string | null
           in_stock: boolean
           length: string
           name: string
@@ -138,6 +139,7 @@ export type Database = {
           description?: string
           id?: string
           image_key?: string
+          image_url?: string | null
           in_stock?: boolean
           length?: string
           name: string
@@ -151,6 +153,7 @@ export type Database = {
           description?: string
           id?: string
           image_key?: string
+          image_url?: string | null
           in_stock?: boolean
           length?: string
           name?: string
