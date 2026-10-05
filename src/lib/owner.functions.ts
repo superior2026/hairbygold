@@ -61,6 +61,7 @@ const productInput = z.object({
   description: z.string().trim().min(10).max(2000),
   in_stock: z.boolean(),
   image_key: z.string().trim().max(40),
+  image_url: z.string().trim().max(300).nullable(),
 });
 
 export const saveProduct = createServerFn({ method: "POST" })
