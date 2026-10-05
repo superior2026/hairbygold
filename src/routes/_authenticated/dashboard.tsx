@@ -31,6 +31,7 @@ import {
   updateBookingStatus,
 } from "@/lib/owner.functions";
 import { imageKeys, productImage } from "@/lib/product-images";
+import { listCatalog } from "@/lib/catalog.functions";
 import { currency } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -66,6 +67,7 @@ type ProductRow = {
   description: string;
   in_stock: boolean;
   image_key: string;
+  image_url: string | null;
 };
 
 type ConversationRow = {
@@ -99,6 +101,8 @@ type Draft = {
   description: string;
   inStock: boolean;
   imageKey: string;
+  imageUrl: string | null;
+  file: File | null;
 };
 
 const emptyDraft: Draft = {
@@ -110,6 +114,8 @@ const emptyDraft: Draft = {
   description: "",
   inStock: true,
   imageKey: "product-1",
+  imageUrl: null,
+  file: null,
 };
 
 const selectCls =
@@ -150,6 +156,13 @@ function Dashboard() {
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [flash, setFlash] = useState("");
+  const [photos, setPhotos] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+  const catalog = useServerFn(listCatalog);
+  const refreshPhotos = useCallback(async () => {
+    const list = await catalog();
+    setPhotos(Object.fromEntries(list.map((p) => [p.id, p.image])));
+  }, [catalog]);
 
   const loadAll = useCallback(async () => {
     const [p, c, b] = await Promise.all([fetchProducts(), fetchConversations(), fetchBookings()]);
@@ -157,7 +170,8 @@ function Dashboard() {
     setConversations(c as ConversationRow[]);
     setBookings(b as BookingRow[]);
     setLoading(false);
-  }, [fetchProducts, fetchConversations, fetchBookings]);
+    void refreshPhotos();
+  }, [fetchProducts, fetchConversations, fetchBookings, refreshPhotos]);
 
   useEffect(() => {
     let cancelled = false;
@@ -237,6 +251,8 @@ function Dashboard() {
       description: p.description,
       inStock: p.in_stock,
       imageKey: p.image_key,
+      imageUrl: p.image_url,
+      file: null,
     });
     setErrors({});
     setOpen(true);
@@ -251,8 +267,29 @@ function Dashboard() {
       next["price"] = "Enter a price greater than 0.";
     if (draft.description.trim().length < 10)
       next["description"] = "Add a short description (10+ characters).";
+    if (draft.file) {
+      if (!["image/jpeg", "image/png", "image/webp"].includes(draft.file.type))
+        next["file"] = "Use a JPG, PNG or WEBP photo.";
+      else if (draft.file.size > 5 * 1024 * 1024) next["file"] = "Photos must be 5 MB or smaller.";
+    }
     setErrors(next);
     if (Object.keys(next).length) return;
+
+    setSaving(true);
+    let imageUrl = draft.imageUrl;
+    if (draft.file) {
+      const ext = draft.file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const path = `products/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("product-images")
+        .upload(path, draft.file, { contentType: draft.file.type });
+      if (error) {
+        setErrors({ file: "Upload failed — please try again." });
+        setSaving(false);
+        return;
+      }
+      imageUrl = path;
+    }
 
     await persistProduct({
       data: {
@@ -265,11 +302,14 @@ function Dashboard() {
         description: draft.description.trim(),
         in_stock: draft.inStock,
         image_key: draft.imageKey,
+        image_url: imageUrl,
       },
     });
+    setSaving(false);
     setFlash(editing ? `Saved changes to “${draft.name.trim()}”.` : `Added “${draft.name.trim()}”.`);
     setOpen(false);
     setItems((await fetchProducts()) as ProductRow[]);
+    void refreshPhotos();
   }
 
   async function remove(p: ProductRow) {
@@ -410,7 +450,7 @@ function Dashboard() {
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             <img
-                              src={productImage(p.image_key)}
+                              src={photos[p.id] ?? productImage(p.image_key)}
                               alt=""
                               width={48}
                               height={48}
@@ -685,7 +725,33 @@ function Dashboard() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="p-image">Photo</Label>
+              <Label htmlFor="p-upload">Upload your own photo (JPG, PNG or WEBP, up to 5 MB)</Label>
+              <Input
+                id="p-upload"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                aria-invalid={Boolean(errors["file"])}
+                onChange={(e) => setDraft((d) => ({ ...d, file: e.target.files?.[0] ?? null }))}
+              />
+              {draft.file ? (
+                <img
+                  src={URL.createObjectURL(draft.file)}
+                  alt="Preview of the selected photo"
+                  className="size-24 rounded-sm object-cover"
+                />
+              ) : draft.imageUrl && editing && photos[editing.id] ? (
+                <div className="flex items-center gap-3">
+                  <img src={photos[editing.id]} alt="Current product photo" className="size-24 rounded-sm object-cover" />
+                  <Button type="button" variant="outline" size="sm" onClick={() => setDraft((d) => ({ ...d, imageUrl: null }))}>
+                    Use a studio photo instead
+                  </Button>
+                </div>
+              ) : null}
+              {errors["file"] ? <p className="text-xs text-destructive">{errors["file"]}</p> : null}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="p-image">Studio photo (used when no photo is uploaded)</Label>
               <select
                 id="p-image"
                 className={selectCls}
@@ -728,7 +794,9 @@ function Dashboard() {
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit">{editing ? "Save changes" : "Add product"}</Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? "Saving…" : editing ? "Save changes" : "Add product"}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

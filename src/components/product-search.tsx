@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Search, X } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { products } from "@/lib/mock-data";
+import { useCatalog } from "@/lib/catalog";
 import { currency } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +27,7 @@ export function ProductSearch({
   const [active, setActive] = useState(-1);
   const wrapRef = useRef<HTMLDivElement>(null);
 
+  const products = useCatalog();
   const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (q.length < 1) return [];
@@ -38,7 +39,7 @@ export function ProductSearch({
           p.texture.toLowerCase().includes(q),
       )
       .slice(0, 6);
-  }, [query]);
+  }, [products, query]);
 
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {

@@ -2,11 +2,11 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import {
   cartLines as initialCart,
   notifications as initialNotifications,
-  products,
   type CartLine,
   type Notification,
   type Product,
 } from "./mock-data";
+import { useCatalog } from "./catalog";
 
 type StoreValue = {
   cart: CartLine[];
@@ -29,7 +29,8 @@ const StoreContext = createContext<StoreValue | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartLine[]>(initialCart);
-  const [wishlist, setWishlist] = useState<string[]>(["hbg-002", "hbg-011"]);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const products = useCatalog();
   const [notes, setNotes] = useState<Notification[]>(initialNotifications);
 
   const addToCart = useCallback((product: Product, size = "One size") => {
@@ -81,7 +82,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       markRead,
       markAllRead,
     }),
-    [cart, wishlist, notes, addToCart, setQty, removeLine, toggleWishlist, markRead, markAllRead],
+    [products, cart, wishlist, notes, addToCart, setQty, removeLine, toggleWishlist, markRead, markAllRead],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
