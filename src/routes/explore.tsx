@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -18,7 +19,8 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
-import { categories, products, textures } from "@/lib/mock-data";
+import { catalogQuery } from "@/lib/catalog";
+import { categories, textures } from "@/lib/mock-data";
 import { currency } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +28,7 @@ const searchSchema = z.object({ q: z.string().optional() });
 
 export const Route = createFileRoute("/explore")({
   validateSearch: searchSchema,
+  loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
   head: () => ({
     meta: [
       { title: "Explore Wigs & Hair Products — Hair by Gold" },
@@ -56,6 +59,7 @@ const sortLabels: Record<Sort, string> = {
 
 function Explore() {
   const { q } = Route.useSearch();
+  const { data: products } = useSuspenseQuery(catalogQuery);
   const [query, setQuery] = useState(q ?? "");
   const [category, setCategory] = useState<string>("All");
   const [sort, setSort] = useState<Sort>("featured");
@@ -85,7 +89,7 @@ function Explore() {
     if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
     if (sort === "newest") list.reverse();
     return list;
-  }, [query, category, price, hairTypes, availability, sort]);
+  }, [products, query, category, price, hairTypes, availability, sort]);
 
   const toggleType = (t: string) =>
     setHairTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));

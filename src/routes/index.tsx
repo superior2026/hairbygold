@@ -3,7 +3,8 @@ import { ArrowRight, Scissors, Sparkles, Truck } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
-import { heroImage, products, testimonials } from "@/lib/mock-data";
+import { useCatalog } from "@/lib/catalog";
+import { heroImage, testimonials } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,7 +45,7 @@ const pillars = [
 
 function Home() {
   const loading = useFakeLoading(1100);
-  const featured = products.slice(0, 4);
+  const featured = useCatalog().slice(0, 4);
 
   return (
     <div>

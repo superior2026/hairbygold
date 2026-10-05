@@ -6,7 +6,8 @@ import { ProductCard } from "@/components/product-card";
 import { ProductReviews } from "@/components/product-reviews";
 import { StarRating } from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
-import { getProduct, products, reviewsFor } from "@/lib/mock-data";
+import { catalogQuery } from "@/lib/catalog";
+import { reviewsFor } from "@/lib/mock-data";
 import { currency, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -37,10 +38,11 @@ function variantAvailable(productId: string, color: string, length: string, size
 }
 
 export const Route = createFileRoute("/product/$productId")({
-  loader: ({ params }) => {
-    const product = getProduct(params.productId);
+  loader: async ({ params, context }) => {
+    const products = await context.queryClient.ensureQueryData(catalogQuery);
+    const product = products.find((p) => p.id === params.productId);
     if (!product) throw notFound();
-    return { product };
+    return { product, products };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -62,7 +64,7 @@ export const Route = createFileRoute("/product/$productId")({
 });
 
 function ProductDetail() {
-  const { product } = Route.useLoaderData();
+  const { product, products } = Route.useLoaderData();
   const { addToCart, isWishlisted, toggleWishlist } = useStore();
   const [color, setColor] = useState(colors[0]!.name);
   const [length, setLength] = useState(lengthOptions[1]!.name);
