@@ -26,9 +26,9 @@ export const recommendForCustomer = createServerFn({ method: "POST" })
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) return { ok: false, error: "Recommendations aren't set up yet." };
 
-    const { listCatalog } = await import("@/lib/catalog.functions");
+    const { fetchCatalog } = await import("@/lib/catalog.server");
     const { runAdvisor, AdvisorError } = await import("@/lib/advisor.server");
-    const catalog = (await listCatalog()) as Product[];
+    const catalog = await fetchCatalog();
     const inStock = catalog.filter((p) => p.inStock !== false);
 
     const catalogText = inStock
