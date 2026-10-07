@@ -176,3 +176,22 @@ export const updateBookingStatus = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const setServicePhoto = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) =>
+    z.object({ serviceId: z.string().min(1).max(80), path: z.string().max(300).nullable() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    await assertOwner(context);
+    if (data.path === null) {
+      const { error } = await context.supabase.from("service_photos").delete().eq("service_id", data.serviceId);
+      if (error) throw new Error(error.message);
+      return { ok: true };
+    }
+    const { error } = await context.supabase
+      .from("service_photos")
+      .upsert({ service_id: data.serviceId, image_path: data.path });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

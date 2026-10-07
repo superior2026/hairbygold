@@ -6,3 +6,11 @@ export const listCatalog = createServerFn({ method: "GET" }).handler(async (): P
   const { fetchCatalog } = await import("@/lib/catalog.server");
   return fetchCatalog();
 });
+
+/** Owner-uploaded photos for salon services, keyed by service id. */
+export const listServicePhotos = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Record<string, string>> => {
+    const { fetchServicePhotos } = await import("@/lib/catalog.server");
+    return fetchServicePhotos();
+  },
+);
