@@ -21,7 +21,7 @@ const input = z.object({
 });
 
 export const recommendForCustomer = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => input.parse(data))
+  .validator((data: unknown) => input.parse(data))
   .handler(async ({ data }): Promise<AdvisorResult> => {
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) return { ok: false, error: "Recommendations aren't set up yet." };

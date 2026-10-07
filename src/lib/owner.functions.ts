@@ -66,7 +66,7 @@ const productInput = z.object({
 
 export const saveProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => productInput.parse(input))
+  .validator((input: unknown) => productInput.parse(input))
   .handler(async ({ data, context }) => {
     await assertOwner(context);
     const { id, ...fields } = data;
@@ -86,7 +86,7 @@ export const saveProduct = createServerFn({ method: "POST" })
 
 export const deleteProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .validator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     await assertOwner(context);
     const { error } = await context.supabase.from("products").delete().eq("id", data.id);
@@ -108,7 +108,7 @@ export const listConversations = createServerFn({ method: "GET" })
 
 export const getConversationThread = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z.object({ conversationId: z.string().uuid(), markRead: z.boolean().optional() }).parse(input),
   )
   .handler(async ({ data, context }) => {
@@ -130,7 +130,7 @@ export const getConversationThread = createServerFn({ method: "POST" })
 
 export const replyToConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({ conversationId: z.string().uuid(), body: z.string().trim().min(1).max(2000) })
       .parse(input),
@@ -162,7 +162,7 @@ export const listBookings = createServerFn({ method: "GET" })
 
 export const updateBookingStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({ id: z.string().uuid(), status: z.enum(["new", "confirmed", "declined", "done"]) })
       .parse(input),
