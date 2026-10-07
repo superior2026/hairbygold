@@ -9,6 +9,7 @@ const columns = [
       { label: "Explore all", to: "/explore" as const },
       { label: "Salon services", to: "/services" as const },
       { label: "Featured hairstyles", to: "/gallery" as const },
+      { label: "AI style advisor", to: "/style-advisor" as const },
       { label: "Order history", to: "/orders" as const },
     ],
   },

@@ -17,7 +17,7 @@ const startChatInput = z.object({
 });
 
 export const startConversation = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => startChatInput.parse(input))
+  .validator((input: unknown) => startChatInput.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: conversation, error } = await supabaseAdmin
@@ -47,7 +47,7 @@ async function resolveConversation(token: string) {
 }
 
 export const getConversation = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => z.object({ token: tokenSchema }).parse(input))
+  .validator((input: unknown) => z.object({ token: tokenSchema }).parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin, conversation } = await resolveConversation(data.token);
     if (!conversation) return { found: false as const, messages: [] as PublicMessage[], name: "" };
@@ -65,7 +65,7 @@ export const getConversation = createServerFn({ method: "POST" })
   });
 
 export const sendCustomerMessage = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z.object({ token: tokenSchema, body: z.string().trim().min(1).max(2000) }).parse(input),
   )
   .handler(async ({ data }) => {
@@ -92,7 +92,7 @@ const bookingInput = z.object({
 });
 
 export const submitBooking = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => bookingInput.parse(input))
+  .validator((input: unknown) => bookingInput.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("bookings").insert(data);
