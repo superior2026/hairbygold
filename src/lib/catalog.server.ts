@@ -51,3 +51,19 @@ export async function fetchCatalog(): Promise<Product[]> {
     image: (r.image_url && signed.get(r.image_url)) || productImage(r.image_key),
   }));
 }
+
+export async function fetchServicePhotos(): Promise<Record<string, string>> {
+  const supabase = publicClient();
+  const { data, error } = await supabase.from("service_photos").select("service_id, image_path");
+  if (error || !data?.length) return {};
+  const { data: urls } = await supabase.storage
+    .from("product-images")
+    .createSignedUrls(data.map((r) => r.image_path), 60 * 60 * 24 * 7);
+  const byPath = new Map((urls ?? []).map((u) => [u.path, u.signedUrl]));
+  const out: Record<string, string> = {};
+  for (const r of data) {
+    const url = byPath.get(r.image_path);
+    if (url) out[r.service_id] = url;
+  }
+  return out;
+}
