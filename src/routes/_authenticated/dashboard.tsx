@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import { useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Send, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -28,10 +29,13 @@ import {
   listOwnerProducts,
   replyToConversation,
   saveProduct,
+  setServicePhoto,
   updateBookingStatus,
 } from "@/lib/owner.functions";
 import { imageKeys, productImage } from "@/lib/product-images";
-import { listCatalog } from "@/lib/catalog.functions";
+import { listCatalog, listServicePhotos } from "@/lib/catalog.functions";
+import { services } from "@/lib/salon-data";
+import { uploadStudioPhoto, validatePhoto } from "@/lib/photo-upload";
 import { currency } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -159,6 +163,37 @@ function Dashboard() {
   const [photos, setPhotos] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const catalog = useServerFn(listCatalog);
+  const queryClient = useQueryClient();
+  const saveServicePhoto = useServerFn(setServicePhoto);
+  const fetchServicePhotos = useServerFn(listServicePhotos);
+  const [servicePhotos, setServicePhotos] = useState<Record<string, string>>({});
+  const [serviceBusy, setServiceBusy] = useState<string | null>(null);
+  const [serviceError, setServiceError] = useState<Record<string, string>>({});
+  const loadServicePhotos = useCallback(async () => {
+    setServicePhotos(await fetchServicePhotos());
+  }, [fetchServicePhotos]);
+
+  async function changeServicePhoto(serviceId: string, file: File | null) {
+    setServiceError((e) => ({ ...e, [serviceId]: "" }));
+    if (file) {
+      const problem = validatePhoto(file);
+      if (problem) {
+        setServiceError((e) => ({ ...e, [serviceId]: problem }));
+        return;
+      }
+    }
+    setServiceBusy(serviceId);
+    try {
+      const path = file ? await uploadStudioPhoto(file, "services") : null;
+      await saveServicePhoto({ data: { serviceId, path } });
+      await loadServicePhotos();
+      void queryClient.invalidateQueries({ queryKey: ["service-photos"] });
+    } catch (err) {
+      setServiceError((e) => ({ ...e, [serviceId]: (err as Error).message }));
+    } finally {
+      setServiceBusy(null);
+    }
+  }
   const refreshPhotos = useCallback(async () => {
     const list = await catalog();
     setPhotos(Object.fromEntries(list.map((p) => [p.id, p.image])));
@@ -171,7 +206,8 @@ function Dashboard() {
     setBookings(b as BookingRow[]);
     setLoading(false);
     void refreshPhotos();
-  }, [fetchProducts, fetchConversations, fetchBookings, refreshPhotos]);
+    void loadServicePhotos();
+  }, [loadServicePhotos, fetchProducts, fetchConversations, fetchBookings, refreshPhotos]);
 
   useEffect(() => {
     let cancelled = false;
@@ -310,11 +346,13 @@ function Dashboard() {
     setOpen(false);
     setItems((await fetchProducts()) as ProductRow[]);
     void refreshPhotos();
+    void queryClient.invalidateQueries({ queryKey: ["catalog"] });
   }
 
   async function remove(p: ProductRow) {
     await removeProduct({ data: { id: p.id } });
     setFlash(`Removed “${p.name}”.`);
+    void queryClient.invalidateQueries({ queryKey: ["catalog"] });
     setItems((await fetchProducts()) as ProductRow[]);
   }
 
@@ -414,6 +452,7 @@ function Dashboard() {
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="bookings">Bookings</TabsTrigger>
+          <TabsTrigger value="services">Service photos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="products" className="mt-6">
@@ -639,6 +678,47 @@ function Dashboard() {
                 </li>
               ))
             )}
+          </ul>
+        </TabsContent>
+        <TabsContent value="services" className="mt-6">
+          <h2 className="font-display text-2xl">Service photos</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Upload your own photo for each service. It appears on the Services page and in the Book Now form.
+          </p>
+          <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((sv) => (
+              <li key={sv.id} className="overflow-hidden rounded-sm border border-border bg-card">
+                <img
+                  src={servicePhotos[sv.id] ?? sv.image}
+                  alt={sv.imageAlt}
+                  className="aspect-[4/3] w-full object-cover"
+                />
+                <div className="space-y-3 p-4">
+                  <p className="font-display text-xl">{sv.name}</p>
+                  <Label htmlFor={`sp-${sv.id}`} className="text-xs text-muted-foreground">
+                    Upload photo (JPG, PNG or WEBP, up to 5 MB)
+                  </Label>
+                  <Input
+                    id={`sp-${sv.id}`}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={serviceBusy === sv.id}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) void changeServicePhoto(sv.id, f);
+                      e.target.value = "";
+                    }}
+                  />
+                  {serviceBusy === sv.id ? <p className="text-xs text-muted-foreground">Uploading…</p> : null}
+                  {serviceError[sv.id] ? <p className="text-xs text-destructive">{serviceError[sv.id]}</p> : null}
+                  {servicePhotos[sv.id] ? (
+                    <Button size="sm" variant="ghost" onClick={() => void changeServicePhoto(sv.id, null)}>
+                      Use the default photo
+                    </Button>
+                  ) : null}
+                </div>
+              </li>
+            ))}
           </ul>
         </TabsContent>
       </Tabs>
