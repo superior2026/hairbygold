@@ -129,13 +129,22 @@ function Home() {
               Signature pieces
             </h2>
           </div>
-          <Link
-            to="/explore"
-            className="inline-flex items-center gap-2 rounded-sm text-sm text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring/50"
-          >
-            View all products
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
+          <div className="flex flex-wrap gap-5">
+            <Link
+              to="/catalog"
+              className="inline-flex items-center gap-2 rounded-sm text-sm text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              Browse the catalogue
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <Link
+              to="/explore"
+              className="inline-flex items-center gap-2 rounded-sm text-sm text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              View all products
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
 
         <div className="mt-10" aria-busy={loading}>
