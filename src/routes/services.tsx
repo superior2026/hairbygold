@@ -64,9 +64,9 @@ function ServiceCardSkeleton() {
 function Services() {
   const loading = useFakeLoading(900);
   const photos = useQuery(servicePhotosQuery).data ?? {};
-  const bookingService = services.find((x) => x.name === booking);
   const saveBooking = useServerFn(submitBooking);
   const [booking, setBooking] = useState<string | null>(null);
+  const bookingService = services.find((x) => x.name === booking);
   const [values, setValues] = useState({ name: "", contact: "", date: "", time: "", notes: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
