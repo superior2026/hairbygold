@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ExploreRouteImport } from './routes/explore'
@@ -44,6 +45,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogRoute = CatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -145,6 +151,7 @@ const TrackingOrderIdRoute = TrackingOrderIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/catalog': typeof CatalogRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/catalog': typeof CatalogRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/catalog': typeof CatalogRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
   '/explore': typeof ExploreRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cart'
+    | '/catalog'
     | '/chat'
     | '/checkout'
     | '/explore'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cart'
+    | '/catalog'
     | '/chat'
     | '/checkout'
     | '/explore'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/cart'
+    | '/catalog'
     | '/chat'
     | '/checkout'
     | '/explore'
@@ -290,6 +302,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CartRoute: typeof CartRoute
+  CatalogRoute: typeof CatalogRoute
   ChatRoute: typeof ChatRoute
   CheckoutRoute: typeof CheckoutRoute
   ExploreRoute: typeof ExploreRoute
@@ -331,6 +344,13 @@ declare module '@tanstack/react-router' {
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalog': {
+      id: '/catalog'
+      path: '/catalog'
+      fullPath: '/catalog'
+      preLoaderRoute: typeof CatalogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -484,6 +504,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CartRoute: CartRoute,
+  CatalogRoute: CatalogRoute,
   ChatRoute: ChatRoute,
   CheckoutRoute: CheckoutRoute,
   ExploreRoute: ExploreRoute,
