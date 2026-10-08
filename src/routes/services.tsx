@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
+import { useQuery } from "@tanstack/react-query";
+import { servicePhotosQuery } from "@/lib/catalog";
 import { services } from "@/lib/salon-data";
 import { submitBooking } from "@/lib/studio.functions";
 import { useServerFn } from "@tanstack/react-start";
@@ -61,6 +63,8 @@ function ServiceCardSkeleton() {
 
 function Services() {
   const loading = useFakeLoading(900);
+  const photos = useQuery(servicePhotosQuery).data ?? {};
+  const bookingService = services.find((x) => x.name === booking);
   const saveBooking = useServerFn(submitBooking);
   const [booking, setBooking] = useState<string | null>(null);
   const [values, setValues] = useState({ name: "", contact: "", date: "", time: "", notes: "" });
@@ -156,7 +160,7 @@ function Services() {
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
                   <img
-                    src={s.image}
+                    src={photos[s.id] ?? s.image}
                     alt={s.imageAlt}
                     loading="lazy"
                     width={896}
@@ -199,6 +203,13 @@ function Services() {
       <Dialog open={booking !== null} onOpenChange={(o) => setBooking(o ? booking : null)}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
+            {bookingService ? (
+              <img
+                src={photos[bookingService.id] ?? bookingService.image}
+                alt={bookingService.imageAlt}
+                className="mb-2 aspect-[16/9] w-full rounded-sm object-cover"
+              />
+            ) : null}
             <DialogTitle className="font-display text-2xl">
               Book {booking ?? "an appointment"}
             </DialogTitle>
