@@ -195,3 +195,32 @@ export const setServicePhoto = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/** Customer accounts with their booking history and chat activity. */
+export const listCustomers = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertOwner(context);
+    const [profiles, bookings, convos] = await Promise.all([
+      context.supabase.from("profiles").select("*").order("created_at", { ascending: false }),
+      context.supabase
+        .from("bookings")
+        .select("id, user_id, service_name, preferred_date, preferred_time, status")
+        .not("user_id", "is", null)
+        .order("preferred_date", { ascending: false }),
+      context.supabase
+        .from("conversations")
+        .select("id, user_id, last_message_at")
+        .not("user_id", "is", null),
+    ]);
+    if (profiles.error) throw new Error(profiles.error.message);
+    const owners = await context.supabase.from("user_roles").select("user_id").eq("role", "owner");
+    const ownerIds = new Set((owners.data ?? []).map((r: { user_id: string }) => r.user_id));
+    return (profiles.data ?? [])
+      .filter((p: { id: string }) => !ownerIds.has(p.id))
+      .map((p: any) => ({
+        ...p,
+        bookings: (bookings.data ?? []).filter((b: any) => b.user_id === p.id),
+        conversation: (convos.data ?? []).find((c: any) => c.user_id === p.id) ?? null,
+      }));
+  });

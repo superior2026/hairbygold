@@ -38,6 +38,7 @@ import { services } from "@/lib/salon-data";
 import { uploadStudioPhoto, validatePhoto } from "@/lib/photo-upload";
 import { currency } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { CustomersPanel } from "@/components/customers-panel";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -453,6 +454,7 @@ function Dashboard() {
           <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="bookings">Bookings</TabsTrigger>
           <TabsTrigger value="services">Service photos</TabsTrigger>
+          <TabsTrigger value="customers">Customers</TabsTrigger>
         </TabsList>
 
         <TabsContent value="products" className="mt-6">
@@ -720,6 +722,9 @@ function Dashboard() {
               </li>
             ))}
           </ul>
+        </TabsContent>
+        <TabsContent value="customers" className="mt-6">
+          <CustomersPanel />
         </TabsContent>
       </Tabs>
 

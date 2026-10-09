@@ -10,13 +10,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Create Studio Account — Hair by Gold" },
+      { title: "Create Account — Hair by Gold" },
       {
         name: "description",
-        content: "Create the Hair by Gold studio owner account to manage products, messages and bookings.",
+        content: "Create a Hair by Gold account to chat with the studio and book appointments.",
       },
-      { property: "og:title", content: "Create Studio Account — Hair by Gold" },
-      { property: "og:description", content: "Set up the Hair by Gold owner account." },
+      { property: "og:title", content: "Create Account — Hair by Gold" },
+      { property: "og:description", content: "Create your Hair by Gold account." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -24,13 +24,14 @@ export const Route = createFileRoute("/signup")({
 });
 
 const schema = z.object({
+  name: z.string().trim().min(2, "Enter your name").max(80),
   email: z.string().trim().email("Enter a valid email").max(255),
   password: z.string().min(8, "Use at least 8 characters").max(72),
 });
 
 function Signup() {
   const navigate = useNavigate();
-  const [values, setValues] = useState({ email: "", password: "" });
+  const [values, setValues] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
   const [confirm, setConfirm] = useState(false);
@@ -51,7 +52,7 @@ function Signup() {
     const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
-      options: { emailRedirectTo: `${window.location.origin}/login` },
+      options: { emailRedirectTo: `${window.location.origin}/login`, data: { full_name: parsed.data.name } },
     });
     setBusy(false);
     if (error) {
@@ -59,7 +60,7 @@ function Signup() {
       return;
     }
     if (data.session) {
-      void navigate({ to: "/dashboard", replace: true });
+      void navigate({ to: "/account", replace: true });
       return;
     }
     setConfirm(true);
@@ -69,9 +70,9 @@ function Signup() {
     <div className="mx-auto max-w-md px-5 py-16 lg:px-8">
       <div className="text-center">
         <BrandLogo className="mx-auto" imgClassName="h-10 sm:h-12" />
-        <h1 className="mt-6 font-display text-4xl">Create studio account</h1>
+        <h1 className="mt-6 font-display text-4xl">Create your account</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Only the studio owner needs this. Shoppers browse, order and chat without signing up.
+          Your chats, bookings and profile are saved to your account.
         </p>
       </div>
 
@@ -88,6 +89,23 @@ function Signup() {
         </p>
       ) : (
         <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
+          <div>
+            <Label htmlFor="su-name">Your name</Label>
+            <Input
+              id="su-name"
+              autoComplete="name"
+              className="mt-2"
+              maxLength={80}
+              value={values.name}
+              aria-invalid={!!errors["name"]}
+              onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))}
+            />
+            {errors["name"] ? (
+              <p role="alert" className="mt-1.5 text-xs text-destructive">
+                {errors["name"]}
+              </p>
+            ) : null}
+          </div>
           <div>
             <Label htmlFor="su-email">Email</Label>
             <Input
@@ -133,7 +151,7 @@ function Signup() {
             {busy ? "Creating…" : "Create account"}
           </Button>
           <p className="text-center text-xs text-muted-foreground">
-            Already set up?{" "}
+            Already have an account?{" "}
             <Link to="/login" className="hover:text-primary">
               Sign in
             </Link>

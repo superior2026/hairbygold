@@ -10,13 +10,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Owner Sign In — Hair by Gold" },
+      { title: "Sign In — Hair by Gold" },
       {
         name: "description",
         content: "Sign in to the Hair by Gold studio account to manage products, messages and bookings.",
       },
-      { property: "og:title", content: "Owner Sign In — Hair by Gold" },
-      { property: "og:description", content: "Access your Hair by Gold studio account." },
+      { property: "og:title", content: "Sign In — Hair by Gold" },
+      { property: "og:description", content: "Sign in to your Hair by Gold account." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -56,16 +56,16 @@ function Login() {
       setMessage(error.message);
       return;
     }
-    void navigate({ to: "/dashboard", replace: true });
+    void navigate({ to: "/account", replace: true });
   };
 
   return (
     <div className="mx-auto max-w-md px-5 py-16 lg:px-8">
       <div className="text-center">
         <BrandLogo className="mx-auto" imgClassName="h-10 sm:h-12" />
-        <h1 className="mt-6 font-display text-4xl">Studio sign in</h1>
+        <h1 className="mt-6 font-display text-4xl">Sign in</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          For the studio owner. Customers don&apos;t need an account to shop or chat.
+          Sign in to chat with the studio, book appointments and see your history.
         </p>
       </div>
 
