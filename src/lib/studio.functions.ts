@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-/** Public-facing server functions: visitor chat with the studio and booking requests. */
+/** Customer-facing server functions. Every call requires a signed-in customer account. */
 
 export type PublicMessage = {
   id: string;
@@ -10,75 +11,103 @@ export type PublicMessage = {
   created_at: string;
 };
 
-const startChatInput = z.object({
-  name: z.string().trim().min(2).max(80),
-  contact: z.string().trim().min(5).max(120),
-  message: z.string().trim().min(2).max(2000),
+const profileInput = z.object({
+  full_name: z.string().trim().min(2).max(80),
+  phone: z.string().trim().max(40),
+  hair_notes: z.string().trim().max(500),
 });
 
-export const startConversation = createServerFn({ method: "POST" })
-  .validator((input: unknown) => startChatInput.parse(input))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: conversation, error } = await supabaseAdmin
-      .from("conversations")
-      .insert({ customer_name: data.name, contact: data.contact })
-      .select("id, access_token")
-      .single();
+export const getMyProfile = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("profiles")
+      .select("full_name, phone, email, hair_notes")
+      .eq("id", context.userId)
+      .maybeSingle();
     if (error) throw new Error(error.message);
-    const { error: messageError } = await supabaseAdmin
-      .from("messages")
-      .insert({ conversation_id: conversation.id, sender: "customer", body: data.message });
-    if (messageError) throw new Error(messageError.message);
-    return { token: conversation.access_token as string };
+    const email = (context.claims as { email?: string }).email ?? "";
+    return data ?? { full_name: "", phone: "", email, hair_notes: "" };
   });
 
-const tokenSchema = z.string().uuid();
+export const saveMyProfile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => profileInput.parse(input))
+  .handler(async ({ data, context }) => {
+    const email = (context.claims as { email?: string }).email ?? "";
+    const { error } = await context.supabase
+      .from("profiles")
+      .upsert({ id: context.userId, email, ...data });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
 
-async function resolveConversation(token: string) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
-    .from("conversations")
-    .select("id, customer_name")
-    .eq("access_token", token)
+async function displayName(context: { supabase: any; userId: string; claims: unknown }) {
+  const { data } = await context.supabase
+    .from("profiles")
+    .select("full_name, phone, email")
+    .eq("id", context.userId)
     .maybeSingle();
-  if (error) throw new Error(error.message);
-  return { supabaseAdmin, conversation: data };
+  const email = (context.claims as { email?: string }).email ?? "";
+  return {
+    name: data?.full_name || email.split("@")[0] || "Customer",
+    contact: data?.phone || data?.email || email,
+  };
 }
 
-export const getConversation = createServerFn({ method: "POST" })
-  .validator((input: unknown) => z.object({ token: tokenSchema }).parse(input))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin, conversation } = await resolveConversation(data.token);
-    if (!conversation) return { found: false as const, messages: [] as PublicMessage[], name: "" };
-    const { data: messages, error } = await supabaseAdmin
+/** The signed-in customer's single ongoing conversation with the studio. */
+export const getMyConversation = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: convo, error } = await context.supabase
+      .from("conversations")
+      .select("id")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!convo) return { messages: [] as PublicMessage[] };
+    const { data: messages, error: mErr } = await context.supabase
       .from("messages")
       .select("id, sender, body, created_at")
-      .eq("conversation_id", conversation.id)
+      .eq("conversation_id", convo.id)
       .order("created_at", { ascending: true });
-    if (error) throw new Error(error.message);
-    return {
-      found: true as const,
-      name: conversation.customer_name as string,
-      messages: (messages ?? []) as PublicMessage[],
-    };
+    if (mErr) throw new Error(mErr.message);
+    return { messages: (messages ?? []) as PublicMessage[] };
   });
 
-export const sendCustomerMessage = createServerFn({ method: "POST" })
-  .validator((input: unknown) =>
-    z.object({ token: tokenSchema, body: z.string().trim().min(1).max(2000) }).parse(input),
-  )
-  .handler(async ({ data }) => {
-    const { supabaseAdmin, conversation } = await resolveConversation(data.token);
-    if (!conversation) throw new Error("Conversation not found");
+export const sendMyMessage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => z.object({ body: z.string().trim().min(1).max(2000) }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: existing } = await supabaseAdmin
+      .from("conversations")
+      .select("id")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    let conversationId = existing?.id as string | undefined;
+    if (!conversationId) {
+      const who = await displayName(context);
+      const { data: created, error } = await supabaseAdmin
+        .from("conversations")
+        .insert({ customer_name: who.name, contact: who.contact, user_id: context.userId })
+        .select("id")
+        .single();
+      if (error) throw new Error(error.message);
+      conversationId = created.id;
+    }
     const { error } = await supabaseAdmin
       .from("messages")
-      .insert({ conversation_id: conversation.id, sender: "customer", body: data.body });
+      .insert({ conversation_id: conversationId!, sender: "customer", body: data.body });
     if (error) throw new Error(error.message);
     await supabaseAdmin
       .from("conversations")
       .update({ last_message_at: new Date().toISOString(), unread_for_owner: true })
-      .eq("id", conversation.id);
+      .eq("id", conversationId!);
     return { ok: true };
   });
 
@@ -92,10 +121,25 @@ const bookingInput = z.object({
 });
 
 export const submitBooking = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator((input: unknown) => bookingInput.parse(input))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("bookings").insert(data);
+    const { error } = await supabaseAdmin
+      .from("bookings")
+      .insert({ ...data, user_id: context.userId });
     if (error) throw new Error(error.message);
     return { ok: true };
+  });
+
+export const listMyBookings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("bookings")
+      .select("id, service_name, preferred_date, preferred_time, status, notes, created_at")
+      .eq("user_id", context.userId)
+      .order("preferred_date", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data ?? [];
   });
