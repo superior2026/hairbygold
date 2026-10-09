@@ -31,6 +31,7 @@ const navLinks = [
 const mobileOnlyLinks = [
   { label: "Wishlist", to: "/wishlist" as const },
   { label: "Help", to: "/help" as const },
+  { label: "My account", to: "/account" as const },
   { label: "Owner dashboard", to: "/dashboard" as const },
 ];
 
