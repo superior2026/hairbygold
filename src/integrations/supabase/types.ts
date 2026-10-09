@@ -26,6 +26,7 @@ export type Database = {
           service_name: string
           status: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           contact: string
@@ -38,6 +39,7 @@ export type Database = {
           service_name: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           contact?: string
@@ -50,6 +52,7 @@ export type Database = {
           service_name?: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -63,6 +66,7 @@ export type Database = {
           last_message_at: string
           unread_for_owner: boolean
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           access_token?: string
@@ -73,6 +77,7 @@ export type Database = {
           last_message_at?: string
           unread_for_owner?: boolean
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           access_token?: string
@@ -83,6 +88,7 @@ export type Database = {
           last_message_at?: string
           unread_for_owner?: boolean
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -159,6 +165,36 @@ export type Database = {
           name?: string
           price?: number
           texture?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          hair_notes: string
+          id: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          hair_notes?: string
+          id: string
+          phone?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          hair_notes?: string
+          id?: string
+          phone?: string
           updated_at?: string
         }
         Relationships: []
