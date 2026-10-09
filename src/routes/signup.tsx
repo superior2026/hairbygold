@@ -90,6 +90,23 @@ function Signup() {
       ) : (
         <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
           <div>
+            <Label htmlFor="su-name">Your name</Label>
+            <Input
+              id="su-name"
+              autoComplete="name"
+              className="mt-2"
+              maxLength={80}
+              value={values.name}
+              aria-invalid={!!errors["name"]}
+              onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))}
+            />
+            {errors["name"] ? (
+              <p role="alert" className="mt-1.5 text-xs text-destructive">
+                {errors["name"]}
+              </p>
+            ) : null}
+          </div>
+          <div>
             <Label htmlFor="su-email">Email</Label>
             <Input
               id="su-email"
