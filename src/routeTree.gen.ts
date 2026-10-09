@@ -29,6 +29,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as StyleAdvisorRouteImport } from './routes/style-advisor'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 import { Route as TrackingOrderIdRouteImport } from './routes/tracking.$orderId'
@@ -132,6 +133,11 @@ const WishlistRoute = WishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/style-advisor': typeof StyleAdvisorRoute
   '/wishlist': typeof WishlistRoute
+  '/account': typeof AuthenticatedAccountRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/style-advisor': typeof StyleAdvisorRoute
   '/wishlist': typeof WishlistRoute
+  '/account': typeof AuthenticatedAccountRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/style-advisor': typeof StyleAdvisorRoute
   '/wishlist': typeof WishlistRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/product/$productId': typeof ProductProductIdRoute
   '/tracking/$orderId': typeof TrackingOrderIdRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/style-advisor'
     | '/wishlist'
+    | '/account'
     | '/dashboard'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/style-advisor'
     | '/wishlist'
+    | '/account'
     | '/dashboard'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/style-advisor'
     | '/wishlist'
+    | '/_authenticated/account'
     | '/_authenticated/dashboard'
     | '/product/$productId'
     | '/tracking/$orderId'
@@ -465,6 +477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -490,10 +509,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
