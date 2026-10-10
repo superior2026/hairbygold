@@ -20,6 +20,7 @@ import { servicePhotosQuery } from "@/lib/catalog";
 import { services } from "@/lib/salon-data";
 import { submitBooking } from "@/lib/studio.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { useSession } from "@/hooks/use-session";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -65,6 +66,7 @@ function Services() {
   const loading = useFakeLoading(900);
   const photos = useQuery(servicePhotosQuery).data ?? {};
   const saveBooking = useServerFn(submitBooking);
+  const { session } = useSession();
   const [booking, setBooking] = useState<string | null>(null);
   const bookingService = services.find((x) => x.name === booking);
   const [values, setValues] = useState({ name: "", contact: "", date: "", time: "", notes: "" });
@@ -218,7 +220,19 @@ function Services() {
             </DialogDescription>
           </DialogHeader>
 
-          {sent ? (
+          {!session ? (
+            <div className="rounded-sm border border-border p-6 text-center text-sm">
+              <p>Sign in to book — your bookings are saved to your account.</p>
+              <div className="mt-4 flex justify-center gap-3">
+                <Link to="/login" className="inline-flex h-10 items-center rounded-sm bg-primary px-4 text-primary-foreground">
+                  Sign in
+                </Link>
+                <Link to="/signup" className="inline-flex h-10 items-center rounded-sm border border-input px-4 hover:bg-secondary">
+                  Create account
+                </Link>
+              </div>
+            </div>
+          ) : sent ? (
             <div className="rounded-sm border border-primary/40 bg-primary/5 p-6 text-center">
               <CheckCircle2 className="mx-auto size-7 text-primary" aria-hidden="true" />
               <p className="mt-3 font-display text-xl">Inquiry received</p>
