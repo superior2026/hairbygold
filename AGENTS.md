@@ -8,3 +8,4 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+- Customer chat, bookings and profiles are tied to the signed-in account (user_id); customer server functions use requireSupabaseAuth — why: customers must sign in and history must persist across devices.
