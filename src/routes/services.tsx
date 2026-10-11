@@ -109,7 +109,7 @@ function Services() {
         },
       });
       setSent(true);
-      setValues({ name: "", contact: "", date: "", time: "", notes: "" });
+      setValues((v) => ({ name: v.name, contact: "", date: "", time: "", notes: "" }));
     } catch {
       setFailed("We couldn't send that just now. Please try again in a moment.");
     } finally {
