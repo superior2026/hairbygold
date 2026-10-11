@@ -240,9 +240,14 @@ function Services() {
                 Thank you, {values.name.split(" ")[0]} — we'll reach out to confirm your{" "}
                 {booking?.toLowerCase()} appointment and share current pricing.
               </p>
-              <Button variant="outline" className="mt-5" onClick={() => setBooking(null)}>
-                Close
-              </Button>
+              <div className="mt-5 flex justify-center gap-3">
+                <Button asChild>
+                  <Link to="/book" search={{ service: booking ?? undefined }}>Pick a time on the calendar</Link>
+                </Button>
+                <Button variant="outline" onClick={() => setBooking(null)}>
+                  Close
+                </Button>
+              </div>
             </div>
           ) : (
             <form onSubmit={submit} noValidate className="space-y-4">
