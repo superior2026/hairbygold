@@ -144,7 +144,6 @@ function Signup() {
             </Link>
           </p>
         </form>
-      )}
     </div>
   );
 }
