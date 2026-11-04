@@ -34,7 +34,6 @@ function Signup() {
   const [values, setValues] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
-  const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -63,7 +62,7 @@ function Signup() {
       void navigate({ to: "/account", replace: true });
       return;
     }
-    setConfirm(true);
+    void navigate({ to: "/verify-email", search: { email: parsed.data.email }, replace: true });
   };
 
   return (
@@ -76,19 +75,7 @@ function Signup() {
         </p>
       </div>
 
-      {confirm ? (
-        <p
-          role="status"
-          className="mt-8 rounded-sm border border-primary/40 bg-card p-6 text-center text-sm"
-        >
-          Check your email and click the confirmation link, then{" "}
-          <Link to="/login" className="text-primary underline">
-            sign in
-          </Link>
-          .
-        </p>
-      ) : (
-        <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
+      <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
           <div>
             <Label htmlFor="su-name">Your name</Label>
             <Input
@@ -157,7 +144,6 @@ function Signup() {
             </Link>
           </p>
         </form>
-      )}
     </div>
   );
 }
