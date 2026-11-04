@@ -34,7 +34,6 @@ function Signup() {
   const [values, setValues] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
-  const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -63,7 +62,7 @@ function Signup() {
       void navigate({ to: "/account", replace: true });
       return;
     }
-    setConfirm(true);
+    void navigate({ to: "/verify-email", search: { email: parsed.data.email }, replace: true });
   };
 
   return (
