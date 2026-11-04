@@ -75,19 +75,7 @@ function Signup() {
         </p>
       </div>
 
-      {confirm ? (
-        <p
-          role="status"
-          className="mt-8 rounded-sm border border-primary/40 bg-card p-6 text-center text-sm"
-        >
-          Check your email and click the confirmation link, then{" "}
-          <Link to="/login" className="text-primary underline">
-            sign in
-          </Link>
-          .
-        </p>
-      ) : (
-        <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
+      <form onSubmit={submit} noValidate className="mt-8 space-y-5 rounded-sm border border-border bg-card p-7">
           <div>
             <Label htmlFor="su-name">Your name</Label>
             <Input
