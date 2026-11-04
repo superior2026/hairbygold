@@ -33,6 +33,7 @@ function Login() {
   const [values, setValues] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
+  const [unverified, setUnverified] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -53,6 +54,11 @@ function Login() {
     });
     setBusy(false);
     if (error) {
+      if (error.message.toLowerCase().includes("not confirmed")) {
+        setUnverified(true);
+        setMessage("Your email isn't verified yet. Enter the code we sent you to activate your account.");
+        return;
+      }
       setMessage(error.message);
       return;
     }
