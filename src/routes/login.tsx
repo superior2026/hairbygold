@@ -117,6 +117,15 @@ function Login() {
             {message}
           </p>
         ) : null}
+        {unverified ? (
+          <Link
+            to="/verify-email"
+            search={{ email: values.email }}
+            className="block text-center text-sm text-primary underline"
+          >
+            Enter my verification code
+          </Link>
+        ) : null}
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "Signing in…" : "Sign in"}
         </Button>
