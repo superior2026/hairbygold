@@ -195,52 +195,60 @@ function Home() {
 
       <section aria-labelledby="salon" className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         <div className="grid gap-6 md:grid-cols-2">
-          <Link
-            to="/services"
-            className="group rounded-sm border border-border bg-card p-8 transition hover:border-primary/60 hover:shadow-lift focus-visible:ring-2 focus-visible:ring-ring/50"
-          >
-            <h2 id="salon" className="font-display text-3xl">
-              Salon services
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Installations, revamps, bridal and birthday hair, ponytails, natural hair styling and
-              home service. Contact us for current pricing.
-            </p>
-            <span className="mt-5 inline-flex items-center gap-2 text-sm text-primary">
-              Book an appointment
-              <ArrowRight className="size-4 transition group-hover:translate-x-1" aria-hidden="true" />
-            </span>
-          </Link>
-          <Link
-            to="/gallery"
-            className="group rounded-sm border border-border bg-card p-8 transition hover:border-primary/60 hover:shadow-lift focus-visible:ring-2 focus-visible:ring-ring/50"
-          >
-            <h2 className="font-display text-3xl">Featured hairstyles</h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Browse the studio gallery by installations, bridal, wig styling, ponytails, natural
-              hair and special occasions.
-            </p>
-            <span className="mt-5 inline-flex items-center gap-2 text-sm text-primary">
-              View the gallery
-              <ArrowRight className="size-4 transition group-hover:translate-x-1" aria-hidden="true" />
-            </span>
-          </Link>
+          <FadeIn delay={0}>
+            <Link
+              to="/services"
+              className="group block h-full rounded-sm border border-border bg-card p-8 transition hover:border-primary/60 hover:shadow-lift focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              <h2 id="salon" className="font-display text-3xl">
+                Salon services
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Installations, revamps, bridal and birthday hair, ponytails, natural hair styling and
+                home service. Contact us for current pricing.
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm text-primary">
+                Book an appointment
+                <ArrowRight className="size-4 transition group-hover:translate-x-1" aria-hidden="true" />
+              </span>
+            </Link>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <Link
+              to="/gallery"
+              className="group block h-full rounded-sm border border-border bg-card p-8 transition hover:border-primary/60 hover:shadow-lift focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              <h2 className="font-display text-3xl">Featured hairstyles</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Browse the studio gallery by installations, bridal, wig styling, ponytails, natural
+                hair and special occasions.
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm text-primary">
+                View the gallery
+                <ArrowRight className="size-4 transition group-hover:translate-x-1" aria-hidden="true" />
+              </span>
+            </Link>
+          </FadeIn>
         </div>
       </section>
 
       <section aria-labelledby="loved" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <h2 id="loved" className="text-center font-display text-4xl">
-          Loved by the studio chair
-        </h2>
-        <div className="mx-auto mt-4 h-px w-24 gold-rule" aria-hidden="true" />
-        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+        <FadeIn className="text-center">
+          <h2 id="loved" className="font-display text-4xl">
+            Loved by the studio chair
+          </h2>
+        </FadeIn>
+        <GrowRule className="mx-auto mt-4 w-24" />
+        <Stagger className="mt-12 grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
-            <li key={t.name} className="rounded-sm border border-border bg-card p-7">
-              <p className="font-display text-xl leading-relaxed">“{t.text}”</p>
-              <p className="mt-5 text-[0.62rem] tracking-luxe text-muted-foreground">{t.name}</p>
-            </li>
+            <StaggerItem key={t.name}>
+              <div className="h-full rounded-sm border border-border bg-card p-7">
+                <p className="font-display text-xl leading-relaxed">“{t.text}”</p>
+                <p className="mt-5 text-[0.62rem] tracking-luxe text-muted-foreground">{t.name}</p>
+              </div>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </section>
     </div>
   );
