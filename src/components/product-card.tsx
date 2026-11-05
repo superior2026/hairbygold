@@ -72,6 +72,6 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

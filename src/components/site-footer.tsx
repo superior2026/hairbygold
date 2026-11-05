@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion-primitives";
 
 const columns = [
   {
