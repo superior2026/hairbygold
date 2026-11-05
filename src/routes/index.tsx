@@ -135,25 +135,31 @@ function Home() {
         <h2 id="pillars" className="sr-only">
           Why Hair by Gold
         </h2>
-        <ul className="grid gap-8 md:grid-cols-3">
+        <Stagger className="grid gap-8 md:grid-cols-3">
           {pillars.map(({ Icon, title, text }) => (
-            <li key={title} className="rounded-sm border border-border bg-card p-7 shadow-soft">
-              <Icon className="size-5 text-primary" aria-hidden="true" />
-              <h3 className="mt-5 font-display text-2xl">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
-            </li>
+            <StaggerItem key={title}>
+              <HoverLift className="h-full">
+                <div className="h-full rounded-sm border border-border bg-card p-7 shadow-soft transition-colors hover:border-primary/50">
+                  <Icon className="size-5 text-primary" aria-hidden="true" />
+                  <h3 className="mt-5 font-display text-2xl">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+                </div>
+              </HoverLift>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </section>
 
       <section aria-labelledby="featured" className="mx-auto max-w-7xl px-5 pb-8 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-[0.62rem] tracking-luxe text-muted-foreground">The edit</p>
-            <h2 id="featured" className="mt-3 font-display text-4xl">
-              Signature pieces
-            </h2>
-          </div>
+          <FadeIn>
+            <div>
+              <p className="text-[0.62rem] tracking-luxe text-muted-foreground">The edit</p>
+              <h2 id="featured" className="mt-3 font-display text-4xl">
+                Signature pieces
+              </h2>
+            </div>
+          </FadeIn>
           <div className="flex flex-wrap gap-5">
             <Link
               to="/catalog"
@@ -176,11 +182,13 @@ function Home() {
           {loading ? (
             <ProductGridSkeleton count={4} />
           ) : (
-            <div className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
+            <Stagger className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
               {featured.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <StaggerItem key={p.id}>
+                  <ProductCard product={p} />
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           )}
         </div>
       </section>
