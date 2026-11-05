@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion-primitives";
 
 const columns = [
   {
@@ -36,47 +37,53 @@ export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-border bg-sidebar">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)] lg:px-8">
-        <div className="max-w-sm">
-          <BrandLogo imgClassName="h-10 sm:h-12" />
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Hand-selected virgin hair, HD lace units and after-care rituals — finished in our Lagos
-            studio and shipped worldwide.
-          </p>
-          <div className="mt-6 flex gap-2">
-            {[
-              { Icon: Instagram, label: "Instagram" },
-              { Icon: Youtube, label: "YouTube" },
-              { Icon: Music2, label: "TikTok" },
-            ].map(({ Icon, label }) => (
-              <a
-                key={label}
-                href="#"
-                aria-label={`Hair by Gold on ${label}`}
-                className="grid size-11 place-items-center rounded-full border border-border text-muted-foreground transition hover:border-primary hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
-              >
-                <Icon className="size-4" aria-hidden="true" />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {columns.map((col) => (
-          <nav key={col.title} aria-label={col.title}>
-            <h2 className="text-[0.62rem] tracking-luxe text-muted-foreground">{col.title}</h2>
-            <ul className="mt-5 space-y-3 text-sm">
-              {col.links.map((l) => (
-                <li key={l.label}>
-                  <Link
-                    to={l.to}
-                    className="rounded-sm text-foreground/80 transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
+        <FadeIn>
+          <div className="max-w-sm">
+            <BrandLogo imgClassName="h-10 sm:h-12" />
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Hand-selected virgin hair, HD lace units and after-care rituals — finished in our Lagos
+              studio and shipped worldwide.
+            </p>
+            <div className="mt-6 flex gap-2">
+              {[
+                { Icon: Instagram, label: "Instagram" },
+                { Icon: Youtube, label: "YouTube" },
+                { Icon: Music2, label: "TikTok" },
+              ].map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={`Hair by Gold on ${label}`}
+                  className="grid size-11 place-items-center rounded-full border border-border text-muted-foreground transition hover:border-primary hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
+                >
+                  <Icon className="size-4" aria-hidden="true" />
+                </a>
               ))}
-            </ul>
-          </nav>
-        ))}
+            </div>
+          </div>
+        </FadeIn>
+
+        <Stagger className="contents">
+          {columns.map((col) => (
+            <StaggerItem key={col.title}>
+              <nav aria-label={col.title}>
+                <h2 className="text-[0.62rem] tracking-luxe text-muted-foreground">{col.title}</h2>
+                <ul className="mt-5 space-y-3 text-sm">
+                  {col.links.map((l) => (
+                    <li key={l.label}>
+                      <Link
+                        to={l.to}
+                        className="rounded-sm text-foreground/80 transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
+                      >
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </StaggerItem>
+          ))}
+        </Stagger>
       </div>
       <div className="border-t border-border px-5 py-6 text-center text-xs text-muted-foreground lg:px-8">
         © {new Date().getFullYear()} Hair by Gold. Demo scaffold — mock data, no live checkout.

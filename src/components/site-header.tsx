@@ -11,7 +11,8 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ProductSearch } from "@/components/product-search";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -48,12 +49,25 @@ export function SiteHeader() {
   const { cartCount, wishlist, unreadCount } = useStore();
   const { theme, toggle } = useTheme();
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const iconCls =
     "relative grid size-11 place-items-center rounded-full text-foreground transition hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur transition-[background-color,box-shadow] duration-300",
+        scrolled && "bg-background/95 shadow-soft",
+      )}
+    >
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-sm focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-primary-foreground"
@@ -73,24 +87,41 @@ export function SiteHeader() {
               <SheetTitle className="sr-only">Hair by Gold Beauty Hub &amp; Spa</SheetTitle>
               <BrandLogo className="w-full justify-start py-1" imgClassName="h-9 w-auto" />
             </SheetHeader>
-            <nav aria-label="Mobile" className="mt-4 flex flex-col px-4">
+            <motion.nav
+              aria-label="Mobile"
+              className="mt-4 flex flex-col px-4"
+              initial="hidden"
+              animate="show"
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05, delayChildren: 0.12 } } }}
+            >
               {[...navLinks, ...mobileOnlyLinks].map((l) => (
-                <Link
+                <motion.div
                   key={l.to}
-                  to={l.to}
-                  className="rounded-sm py-3 text-sm transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
-                  activeProps={{ className: "text-primary" }}
+                  variants={{
+                    hidden: { opacity: 0, x: -16 },
+                    show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+                  }}
                 >
-                  {l.label}
-                </Link>
+                  <Link
+                    to={l.to}
+                    className="block rounded-sm py-3 text-sm transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
+                    activeProps={{ className: "text-primary" }}
+                  >
+                    {l.label}
+                  </Link>
+                </motion.div>
               ))}
-              <Link to="/settings" className="rounded-sm py-3 text-sm hover:text-primary">
-                Settings
-              </Link>
-              <Link to="/login" className="rounded-sm py-3 text-sm hover:text-primary">
-                Sign in
-              </Link>
-            </nav>
+              <motion.div variants={{ hidden: { opacity: 0, x: -16 }, show: { opacity: 1, x: 0, transition: { duration: 0.35 } } }}>
+                <Link to="/settings" className="block rounded-sm py-3 text-sm hover:text-primary">
+                  Settings
+                </Link>
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, x: -16 }, show: { opacity: 1, x: 0, transition: { duration: 0.35 } } }}>
+                <Link to="/login" className="block rounded-sm py-3 text-sm hover:text-primary">
+                  Sign in
+                </Link>
+              </motion.div>
+            </motion.nav>
           </SheetContent>
         </Sheet>
 
@@ -170,11 +201,22 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {mobileSearch ? (
-        <div className="border-t border-border px-5 py-3 lg:hidden">
-          <ProductSearch />
-        </div>
-      ) : null}
+      <AnimatePresence initial={false}>
+        {mobileSearch ? (
+          <motion.div
+            key="mobile-search"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-border lg:hidden"
+          >
+            <div className="px-5 py-3">
+              <ProductSearch />
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }
