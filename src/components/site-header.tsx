@@ -94,12 +94,12 @@ export function SiteHeader() {
               animate="show"
               variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05, delayChildren: 0.12 } } }}
             >
-              {[...navLinks, ...mobileOnlyLinks].map((l, i) => (
+              {[...navLinks, ...mobileOnlyLinks].map((l) => (
                 <motion.div
                   key={l.to}
                   variants={{
                     hidden: { opacity: 0, x: -16 },
-                    show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: i * 0.02 } },
+                    show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
                   }}
                 >
                   <Link

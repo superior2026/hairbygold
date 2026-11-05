@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
+import { motion } from "motion/react";
 import { toast } from "sonner";
 import type { Product } from "@/lib/mock-data";
 import { currency, useStore } from "@/lib/store";
@@ -10,7 +11,11 @@ export function ProductCard({ product }: { product: Product }) {
   const saved = isWishlisted(product.id);
 
   return (
-    <div className="group relative">
+    <motion.div
+      className="group relative"
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 24 }}
+    >
       <Link
         to="/product/$productId"
         params={{ productId: product.id }}
