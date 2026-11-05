@@ -2,6 +2,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Scissors, Sparkles, Truck } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import {
+  AnimatedCounter,
+  FadeInOnMount,
+  FadeIn,
+  GrowRule,
+  HoverLift,
+  Stagger,
+  StaggerItem,
+} from "@/components/motion-primitives";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
 import { useCatalog } from "@/lib/catalog";
 import { heroImage, testimonials } from "@/lib/mock-data";
@@ -43,6 +52,12 @@ const pillars = [
   },
 ];
 
+const stats = [
+  { value: 12, suffix: "k+", label: "Units styled" },
+  { value: 4.9, decimals: 1, label: "Average rating" },
+  { value: 48, suffix: "h", label: "Studio finishing" },
+];
+
 function Home() {
   const loading = useFakeLoading(1100);
   const featured = useCatalog().slice(0, 4);
@@ -52,57 +67,67 @@ function Home() {
       <section className="relative overflow-hidden border-b border-border">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
           <div>
-            <p className="text-[0.62rem] tracking-luxe text-primary">Est. Lagos · Ships worldwide</p>
-            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
-              Hair that carries
-              <span className="block text-gradient-gold">its own light.</span>
-            </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-              HD lace units, double-drawn bundles and after-care rituals — finished by hand, styled
-              with you over chat, delivered ready to wear.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Link
-                to="/explore"
-                className="inline-flex h-12 items-center gap-2 rounded-sm bg-primary px-6 text-sm text-primary-foreground transition hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring/50"
-              >
-                Shop the collection
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-              <Link
-                to="/chat"
-                className="inline-flex h-12 items-center rounded-sm border border-input px-6 text-sm transition hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50"
-              >
-                Talk to a stylist
-              </Link>
-            </div>
-            <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
-              {[
-                ["12k+", "Units styled"],
-                ["4.9", "Average rating"],
-                ["48h", "Studio finishing"],
-              ].map(([v, l]) => (
-                <div key={l}>
-                  <dt className="sr-only">{l}</dt>
-                  <dd>
-                    <span className="block font-display text-3xl">{v}</span>
-                    <span className="mt-1 block text-xs text-muted-foreground">{l}</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <FadeInOnMount>
+              <p className="text-[0.62rem] tracking-luxe text-primary">Est. Lagos · Ships worldwide</p>
+            </FadeInOnMount>
+            <FadeInOnMount delay={0.12}>
+              <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
+                Hair that carries
+                <span className="block text-gradient-gold">its own light.</span>
+              </h1>
+            </FadeInOnMount>
+            <FadeInOnMount delay={0.24}>
+              <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+                HD lace units, double-drawn bundles and after-care rituals — finished by hand, styled
+                with you over chat, delivered ready to wear.
+              </p>
+            </FadeInOnMount>
+            <FadeInOnMount delay={0.36}>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  to="/explore"
+                  className="inline-flex h-12 items-center gap-2 rounded-sm bg-primary px-6 text-sm text-primary-foreground transition hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring/50"
+                >
+                  Shop the collection
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  to="/chat"
+                  className="inline-flex h-12 items-center rounded-sm border border-input px-6 text-sm transition hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50"
+                >
+                  Talk to a stylist
+                </Link>
+              </div>
+            </FadeInOnMount>
+            <FadeInOnMount delay={0.5}>
+              <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
+                {stats.map(({ value, decimals = 0, suffix = "", label }) => (
+                  <div key={label}>
+                    <dt className="sr-only">{label}</dt>
+                    <dd>
+                      <span className="block font-display text-3xl">
+                        <AnimatedCounter value={value} decimals={decimals} suffix={suffix} />
+                      </span>
+                      <span className="mt-1 block text-xs text-muted-foreground">{label}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </FadeInOnMount>
           </div>
 
-          <div className="relative">
-            <div className="absolute -inset-6 -z-10 surface-gold rounded-sm" aria-hidden="true" />
-            <img
-              src={heroImage}
-              alt="Model wearing a glossy body-wave wig from the Hair by Gold collection"
-              width={1536}
-              height={1024}
-              className="aspect-[4/5] w-full rounded-sm object-cover shadow-lift"
-            />
-          </div>
+          <FadeInOnMount delay={0.2} y={32}>
+            <div className="relative">
+              <div className="absolute -inset-6 -z-10 surface-gold rounded-sm" aria-hidden="true" />
+              <img
+                src={heroImage}
+                alt="Model wearing a glossy body-wave wig from the Hair by Gold collection"
+                width={1536}
+                height={1024}
+                className="aspect-[4/5] w-full rounded-sm object-cover shadow-lift"
+              />
+            </div>
+          </FadeInOnMount>
         </div>
       </section>
 
