@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ProductSearch } from "@/components/product-search";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -48,12 +49,25 @@ export function SiteHeader() {
   const { cartCount, wishlist, unreadCount } = useStore();
   const { theme, toggle } = useTheme();
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const iconCls =
     "relative grid size-11 place-items-center rounded-full text-foreground transition hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/50";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur transition-[background-color,box-shadow] duration-300",
+        scrolled && "bg-background/95 shadow-soft",
+      )}
+    >
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-sm focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-primary-foreground"
