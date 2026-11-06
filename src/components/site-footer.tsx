@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
-import { FadeIn, Stagger, StaggerItem } from "@/components/motion-primitives";
+import { FadeIn } from "@/components/motion-primitives";
 
 const columns = [
   {
@@ -63,27 +63,25 @@ export function SiteFooter() {
           </div>
         </FadeIn>
 
-        <Stagger className="contents">
-          {columns.map((col) => (
-            <StaggerItem key={col.title}>
-              <nav aria-label={col.title}>
-                <h2 className="text-[0.62rem] tracking-luxe text-muted-foreground">{col.title}</h2>
-                <ul className="mt-5 space-y-3 text-sm">
-                  {col.links.map((l) => (
-                    <li key={l.label}>
-                      <Link
-                        to={l.to}
-                        className="rounded-sm text-foreground/80 transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
-                      >
-                        {l.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </StaggerItem>
-          ))}
-        </Stagger>
+        {columns.map((col, i) => (
+          <FadeIn key={col.title} delay={0.08 * i}>
+            <nav aria-label={col.title}>
+              <h2 className="text-[0.62rem] tracking-luxe text-muted-foreground">{col.title}</h2>
+              <ul className="mt-5 space-y-3 text-sm">
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <Link
+                      to={l.to}
+                      className="rounded-sm text-foreground/80 transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/50"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </FadeIn>
+        ))}
       </div>
       <div className="border-t border-border px-5 py-6 text-center text-xs text-muted-foreground lg:px-8">
         © {new Date().getFullYear()} Hair by Gold. Demo scaffold — mock data, no live checkout.
