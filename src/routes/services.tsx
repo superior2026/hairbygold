@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Clock, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { FadeInOnMount } from "@/components/motion-primitives";
 import {
   Dialog,
   DialogContent,
@@ -119,7 +120,8 @@ function Services() {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-20">
-      <header className="max-w-2xl">
+      <FadeInOnMount>
+        <header className="max-w-2xl">
         <p className="text-[0.62rem] tracking-luxe text-primary">Beauty hub &amp; spa</p>
         <h1 className="mt-5 font-display text-4xl leading-tight sm:text-5xl">
           Services at the <span className="text-gradient-gold">gold standard</span>
@@ -145,6 +147,7 @@ function Services() {
           </Link>
         </div>
       </header>
+      </FadeInOnMount>
 
       <div className="mt-14" aria-busy={loading}>
         {loading ? (

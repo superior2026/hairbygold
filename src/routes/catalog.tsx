@@ -12,6 +12,7 @@ import { categories, lengths, textures } from "@/lib/mock-data";
 import { getOwnerStatus, saveProduct } from "@/lib/owner.functions";
 import { uploadStudioPhoto, validatePhoto } from "@/lib/photo-upload";
 import { currency } from "@/lib/store";
+import { FadeInOnMount } from "@/components/motion-primitives";
 
 export const Route = createFileRoute("/catalog")({
   loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
@@ -116,7 +117,8 @@ function Catalog() {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-20">
-      <header className="max-w-2xl">
+      <FadeInOnMount>
+        <header className="max-w-2xl">
         <p className="text-[0.62rem] tracking-luxe text-primary">The collection</p>
         <h1 className="mt-5 font-display text-4xl leading-tight sm:text-5xl">
           The Hair by Gold <span className="text-gradient-gold">catalogue</span>
@@ -125,6 +127,7 @@ function Catalog() {
           Every piece we stock, with the details you need to choose.
         </p>
       </header>
+      </FadeInOnMount>
 
       {isOwner ? (
         <section aria-labelledby="add-heading" className="mt-10 rounded-sm border border-primary/40 bg-card p-6">
