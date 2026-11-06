@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FadeInOnMount } from "@/components/motion-primitives";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
 import {
   galleryCategories,
@@ -36,7 +37,8 @@ function Gallery() {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-20">
-      <header className="max-w-2xl">
+      <FadeInOnMount>
+        <header className="max-w-2xl">
         <p className="text-[0.62rem] tracking-luxe text-primary">The gallery</p>
         <h1 className="mt-5 font-display text-4xl leading-tight sm:text-5xl">
           Featured <span className="text-gradient-gold">hairstyles</span>
@@ -52,6 +54,7 @@ function Gallery() {
           Book a service
         </Link>
       </header>
+      </FadeInOnMount>
 
       <div
         role="group"
