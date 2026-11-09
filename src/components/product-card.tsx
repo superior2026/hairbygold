@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Star } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { toast } from "sonner";
 import type { Product } from "@/lib/mock-data";
 import { currency, useStore } from "@/lib/store";
@@ -9,11 +9,12 @@ import { cn } from "@/lib/utils";
 export function ProductCard({ product }: { product: Product }) {
   const { isWishlisted, toggleWishlist } = useStore();
   const saved = isWishlisted(product.id);
+  const reduceMotion = useReducedMotion();
 
   return (
     <motion.div
       className="group relative"
-      whileHover={{ y: -4 }}
+      whileHover={reduceMotion ? undefined : { y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
     >
       <Link
@@ -28,7 +29,7 @@ export function ProductCard({ product }: { product: Product }) {
             loading="lazy"
             width={1024}
             height={1024}
-            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="size-full object-cover transition-transform duration-700 group-hover:scale-105 group-focus-within:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
           />
           {product.badge ? (
             <span className="absolute left-3 top-3 rounded-sm bg-background/90 px-2.5 py-1 text-[0.62rem] tracking-luxe text-foreground">

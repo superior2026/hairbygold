@@ -6,6 +6,7 @@ import { z } from "zod";
 import { ProductCard } from "@/components/product-card";
 import { ProductSearch } from "@/components/product-search";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { FadeInOnMount, Stagger, StaggerItem } from "@/components/motion-primitives";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -188,13 +189,15 @@ function Explore() {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
-      <header>
-        <p className="text-[0.62rem] tracking-luxe text-primary">The collection</p>
-        <h1 className="mt-4 font-display text-5xl">Explore</h1>
-        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
-          {products.length} pieces in the studio right now — wigs, bundles, care and accessories.
-        </p>
-      </header>
+      <FadeInOnMount>
+        <header>
+          <p className="text-[0.62rem] tracking-luxe text-primary">The collection</p>
+          <h1 className="mt-4 font-display text-5xl">Explore</h1>
+          <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+            {products.length} pieces in the studio right now — wigs, bundles, care and accessories.
+          </p>
+        </header>
+      </FadeInOnMount>
 
       <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
         <ProductSearch
@@ -260,11 +263,13 @@ function Explore() {
                 {results.length} result{results.length === 1 ? "" : "s"}
                 {query ? ` for “${query}”` : ""}
               </p>
-              <div className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-3">
+              <Stagger className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-3">
                 {results.map((p) => (
-                  <ProductCard key={p.id} product={p} />
+                  <StaggerItem key={p.id}>
+                    <ProductCard product={p} />
+                  </StaggerItem>
                 ))}
-              </div>
+              </Stagger>
             </>
           )}
         </section>
