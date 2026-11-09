@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle2, Clock, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { FadeInOnMount } from "@/components/motion-primitives";
+import { FadeInOnMount, StaggerList, StaggerListItem } from "@/components/motion-primitives";
 import {
   Dialog,
   DialogContent,
@@ -157,9 +157,9 @@ function Services() {
             ))}
           </div>
         ) : (
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerList className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((s) => (
-              <li
+              <StaggerListItem
                 key={s.id}
                 className="group flex flex-col overflow-hidden rounded-sm border border-border bg-card shadow-soft transition hover:border-primary/60 hover:shadow-lift"
               >
@@ -170,7 +170,7 @@ function Services() {
                     loading="lazy"
                     width={896}
                     height={1120}
-                    className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="size-full object-cover transition-transform duration-700 group-hover:scale-105 group-focus-within:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
                   />
                   <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-sm bg-background/90 px-2.5 py-1 text-[0.62rem] tracking-luxe text-foreground">
                     <Clock className="size-3" aria-hidden="true" />
@@ -199,9 +199,9 @@ function Services() {
                     Book Now
                   </Button>
                 </div>
-              </li>
+              </StaggerListItem>
             ))}
-          </ul>
+          </StaggerList>
         )}
       </div>
 
