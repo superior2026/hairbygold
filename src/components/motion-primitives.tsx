@@ -19,7 +19,7 @@ type FadeInProps = {
 };
 
 /** Fades and slides its content up when it scrolls into view. */
-export function FadeIn({ children, className, delay = 0, y = 24, x = 0, once = true }: FadeInProps) {
+export function FadeIn({ children, className, delay = 0, y = 18, x = 0, once = true }: FadeInProps) {
   const reduce = useReducedMotion();
   if (reduce) return <div className={className}>{children}</div>;
   return (
@@ -28,7 +28,7 @@ export function FadeIn({ children, className, delay = 0, y = 24, x = 0, once = t
       initial={{ opacity: 0, y, x }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once, margin: "-80px" }}
-      transition={{ duration: 0.7, delay, ease: EASE }}
+      transition={{ duration: 0.58, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -36,7 +36,7 @@ export function FadeIn({ children, className, delay = 0, y = 24, x = 0, once = t
 }
 
 /** Plays once on mount (for above-the-fold content such as heroes). */
-export function FadeInOnMount({ children, className, delay = 0, y = 24 }: Omit<FadeInProps, "once" | "x">) {
+export function FadeInOnMount({ children, className, delay = 0, y = 18 }: Omit<FadeInProps, "once" | "x">) {
   const reduce = useReducedMotion();
   if (reduce) return <div className={className}>{children}</div>;
   return (
@@ -44,7 +44,7 @@ export function FadeInOnMount({ children, className, delay = 0, y = 24 }: Omit<F
       className={className}
       initial={{ opacity: 0, y }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay, ease: EASE }}
+      transition={{ duration: 0.65, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -53,12 +53,12 @@ export function FadeInOnMount({ children, className, delay = 0, y = 24 }: Omit<F
 
 const staggerContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.055, delayChildren: 0.04 } },
 };
 
 const staggerItem = {
-  hidden: { opacity: 0, y: 22 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
 };
 
 /** Parent wrapper: staggers its StaggerItem children when scrolled into view. */
@@ -88,6 +88,33 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
   );
 }
 
+/** Native list version of Stagger, preserving list semantics for repeated cards. */
+export function StaggerList({ children, className }: { children: ReactNode; className?: string }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <ul className={className}>{children}</ul>;
+  return (
+    <motion.ul
+      className={className}
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-60px" }}
+    >
+      {children}
+    </motion.ul>
+  );
+}
+
+export function StaggerListItem({ children, className }: { children: ReactNode; className?: string }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <li className={className}>{children}</li>;
+  return (
+    <motion.li className={cn(className)} variants={staggerItem}>
+      {children}
+    </motion.li>
+  );
+}
+
 /** Subtle lift on hover for cards. */
 export function HoverLift({ children, className }: { children: ReactNode; className?: string }) {
   const reduce = useReducedMotion();
@@ -95,8 +122,8 @@ export function HoverLift({ children, className }: { children: ReactNode; classN
   return (
     <motion.div
       className={className}
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 260, damping: 24 }}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 280, damping: 26 }}
     >
       {children}
     </motion.div>
@@ -123,9 +150,14 @@ export function AnimatedCounter({
 }: CounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reduce = useReducedMotion();
   const [display, setDisplay] = useState(() => (0).toFixed(decimals));
 
   useEffect(() => {
+    if (reduce) {
+      setDisplay(value.toFixed(decimals));
+      return;
+    }
     if (!inView) return;
     const controls = animate(0, value, {
       duration,
@@ -133,12 +165,12 @@ export function AnimatedCounter({
       onUpdate: (v) => setDisplay(v.toFixed(decimals)),
     });
     return () => controls.stop();
-  }, [inView, value, decimals, duration]);
+  }, [inView, value, decimals, duration, reduce]);
 
   return (
     <span ref={ref} className={className}>
       {prefix}
-      {display}
+      {reduce ? value.toFixed(decimals) : display}
       {suffix}
     </span>
   );
