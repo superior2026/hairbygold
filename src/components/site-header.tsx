@@ -12,7 +12,7 @@ import {
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ProductSearch } from "@/components/product-search";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -48,6 +48,7 @@ function Badge({ count }: { count: number }) {
 export function SiteHeader() {
   const { cartCount, wishlist, unreadCount } = useStore();
   const { theme, toggle } = useTheme();
+  const reduceMotion = useReducedMotion();
   const [mobileSearch, setMobileSearch] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -90,16 +91,19 @@ export function SiteHeader() {
             <motion.nav
               aria-label="Mobile"
               className="mt-4 flex flex-col px-4"
-              initial="hidden"
+              initial={reduceMotion ? false : "hidden"}
               animate="show"
-              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05, delayChildren: 0.12 } } }}
+              variants={{
+                hidden: {},
+                show: { transition: { staggerChildren: reduceMotion ? 0 : 0.05, delayChildren: reduceMotion ? 0 : 0.12 } },
+              }}
             >
               {[...navLinks, ...mobileOnlyLinks].map((l) => (
                 <motion.div
                   key={l.to}
                   variants={{
                     hidden: { opacity: 0, x: -16 },
-                    show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+                    show: { opacity: 1, x: 0, transition: { duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] } },
                   }}
                 >
                   <Link
