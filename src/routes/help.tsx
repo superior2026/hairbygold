@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { FadeIn, FadeInOnMount } from "@/components/motion-primitives";
 
 export const Route = createFileRoute("/help")({
   head: () => ({
@@ -76,12 +77,15 @@ function Help() {
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-12 lg:px-8">
-      <header>
-        <p className="text-[0.62rem] tracking-luxe text-primary">Support</p>
-        <h1 className="mt-4 font-display text-5xl">Help center</h1>
-      </header>
+      <FadeInOnMount>
+        <header>
+          <p className="text-[0.62rem] tracking-luxe text-primary">Support</p>
+          <h1 className="mt-4 font-display text-5xl">Help center</h1>
+        </header>
+      </FadeInOnMount>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-2">
+        <FadeIn>
         <section aria-labelledby="faq">
           <h2 id="faq" className="font-display text-3xl">
             Frequently asked
@@ -97,7 +101,9 @@ function Help() {
             ))}
           </Accordion>
         </section>
+        </FadeIn>
 
+        <FadeIn delay={0.08}>
         <section aria-labelledby="contact">
           <h2 id="contact" className="font-display text-3xl">
             Contact the studio
@@ -170,6 +176,7 @@ function Help() {
             </form>
           )}
         </section>
+        </FadeIn>
       </div>
     </div>
   );

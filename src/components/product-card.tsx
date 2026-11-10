@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <motion.div
       className="group relative"
-      whileHover={reduceMotion ? undefined : { y: -4 }}
+      whileHover={reduceMotion ? { y: 0 } : { y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
     >
       <Link

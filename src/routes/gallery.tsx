@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FadeInOnMount } from "@/components/motion-primitives";
+import { FadeInOnMount, StaggerList, StaggerListItem } from "@/components/motion-primitives";
 import { useFakeLoading } from "@/hooks/use-fake-loading";
 import {
   galleryCategories,
@@ -95,9 +95,9 @@ function Gallery() {
             ))}
           </div>
         ) : (
-          <ul className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+          <StaggerList className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
             {items.map((item) => (
-              <li key={item.id}>
+              <StaggerListItem key={item.id}>
                 <figure className="group relative overflow-hidden rounded-sm border border-border bg-secondary">
                   <div className="aspect-[4/5] overflow-hidden">
                     <img
@@ -106,7 +106,7 @@ function Gallery() {
                       loading="lazy"
                       width={896}
                       height={1120}
-                      className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="size-full object-cover transition-transform duration-700 group-hover:scale-105 group-focus-within:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
                     />
                   </div>
                   <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 to-transparent p-4">
@@ -118,9 +118,9 @@ function Gallery() {
                     </span>
                   </figcaption>
                 </figure>
-              </li>
+              </StaggerListItem>
             ))}
-          </ul>
+          </StaggerList>
         )}
       </div>
     </div>
