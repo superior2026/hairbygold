@@ -12,7 +12,7 @@ import { categories, lengths, textures } from "@/lib/mock-data";
 import { getOwnerStatus, saveProduct } from "@/lib/owner.functions";
 import { uploadStudioPhoto, validatePhoto } from "@/lib/photo-upload";
 import { currency } from "@/lib/store";
-import { FadeInOnMount } from "@/components/motion-primitives";
+import { FadeInOnMount, StaggerList, StaggerListItem } from "@/components/motion-primitives";
 
 export const Route = createFileRoute("/catalog")({
   loader: ({ context }) => context.queryClient.ensureQueryData(catalogQuery),
@@ -201,11 +201,11 @@ function Catalog() {
         </section>
       ) : null}
 
-      <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <StaggerList className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => (
-          <li key={p.id} className="flex flex-col overflow-hidden rounded-sm border border-border bg-card shadow-soft">
-            <Link to="/product/$productId" params={{ productId: p.id }} className="block aspect-[4/5] overflow-hidden bg-secondary">
-              <img src={p.image} alt={p.name} loading="lazy" className="size-full object-cover transition-transform duration-700 hover:scale-105" />
+          <StaggerListItem key={p.id} className="flex flex-col overflow-hidden rounded-sm border border-border bg-card shadow-soft">
+            <Link to="/product/$productId" params={{ productId: p.id }} className="group block aspect-[4/5] overflow-hidden bg-secondary">
+              <img src={p.image} alt={p.name} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-105 group-focus-visible:scale-105 motion-reduce:transform-none motion-reduce:transition-none" />
             </Link>
             <div className="flex flex-1 flex-col p-6">
               <p className="text-[0.62rem] tracking-luxe text-primary">{p.category}</p>
@@ -221,12 +221,12 @@ function Catalog() {
                 </span>
               </div>
             </div>
-          </li>
+          </StaggerListItem>
         ))}
         {products.length === 0 ? (
           <li className="text-sm text-muted-foreground">The catalogue is being updated — check back soon.</li>
         ) : null}
-      </ul>
+      </StaggerList>
     </div>
   );
 }

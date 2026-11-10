@@ -6,6 +6,7 @@ import { ProductCard } from "@/components/product-card";
 import { ProductReviews } from "@/components/product-reviews";
 import { StarRating } from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
+import { FadeIn, FadeInOnMount } from "@/components/motion-primitives";
 import { catalogQuery } from "@/lib/catalog";
 import { reviewsFor } from "@/lib/mock-data";
 import { currency, useStore } from "@/lib/store";
@@ -114,30 +115,32 @@ function ProductDetail() {
       </nav>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-2">
-        <div>
-          <img
-            src={product.image}
-            alt={product.name}
-            width={1024}
-            height={1024}
-            className="aspect-[4/5] w-full rounded-sm object-cover shadow-soft"
-          />
-          <div className="mt-4 grid grid-cols-4 gap-3">
-            {products.slice(0, 4).map((p) => (
-              <img
-                key={p.id}
-                src={p.image}
-                alt=""
-                loading="lazy"
-                width={1024}
-                height={1024}
-                className="aspect-square w-full rounded-sm object-cover opacity-80"
-              />
-            ))}
+        <FadeInOnMount>
+          <div>
+            <img
+              src={product.image}
+              alt={product.name}
+              width={1024}
+              height={1024}
+              className="aspect-[4/5] w-full rounded-sm object-cover shadow-soft"
+            />
+            <div className="mt-4 grid grid-cols-4 gap-3">
+              {products.slice(0, 4).map((p) => (
+                <img
+                  key={p.id}
+                  src={p.image}
+                  alt=""
+                  loading="lazy"
+                  width={1024}
+                  height={1024}
+                  className="aspect-square w-full rounded-sm object-cover opacity-80 transition-opacity duration-300 hover:opacity-100 motion-reduce:transition-none"
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        </FadeInOnMount>
 
-        <div>
+        <FadeInOnMount delay={0.08}>
           <p className="text-[0.62rem] tracking-luxe text-primary">{product.category}</p>
           <h1 className="mt-4 font-display text-5xl leading-tight">{product.name}</h1>
           <div className="mt-4 flex items-center gap-3">
@@ -290,12 +293,12 @@ function ProductDetail() {
               </li>
             </ul>
           </div>
-        </div>
+        </FadeInOnMount>
       </div>
 
-      <div className="mt-20">
+      <FadeIn className="mt-20">
         <ProductReviews productId={product.id} />
-      </div>
+      </FadeIn>
 
       <section aria-labelledby="related" className="mt-20">
         <h2 id="related" className="font-display text-4xl">

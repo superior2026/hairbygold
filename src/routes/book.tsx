@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { FadeInOnMount } from "@/components/motion-primitives";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,10 +69,13 @@ function BookPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-12 lg:px-8">
-      <p className="text-[0.62rem] tracking-luxe text-primary">Appointments</p>
-      <h1 className="mt-4 font-display text-5xl">Book an appointment</h1>
-      <p className="mt-3 text-sm text-muted-foreground">Open 24/7 — pick any day and time that suits you.</p>
+      <FadeInOnMount>
+        <p className="text-[0.62rem] tracking-luxe text-primary">Appointments</p>
+        <h1 className="mt-4 font-display text-5xl">Book an appointment</h1>
+        <p className="mt-3 text-sm text-muted-foreground">Open 24/7 — pick any day and time that suits you.</p>
+      </FadeInOnMount>
 
+      <FadeInOnMount delay={0.08}>
       {!ready ? null : !session ? (
         <div className="mt-10 rounded-sm border border-border bg-card p-8 text-center text-sm">
           <p>Sign in to book — your appointments are saved to your account.</p>
@@ -151,6 +155,7 @@ function BookPage() {
           </div>
         </form>
       )}
+      </FadeInOnMount>
     </div>
   );
 }
